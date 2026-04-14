@@ -25,7 +25,7 @@ Sistema inteligente para gestión de almacenes gastronómicos con control de cad
 | **Hosting** | Railway (Plan Free → Hobby) | Sin cold starts, soporte nativo para Django |
 
 ## 📁 Estructura del Proyecto
-bash'''
+``` bash
 ├── backend/ # Aplicación Django (API REST)
 │ ├── venv/ # Entorno virtual (NO se sube a Git)
 │ ├── nucleo/ # Configuración principal de Django
@@ -37,7 +37,7 @@ bash'''
 │ ├── diagramas/ # Diagramas UML, Ishikawa, Relacionales
 │ └── informes/ # Avances, Entrevistas, Análisis
 └── .github/ # Configuración de CI/CD (futuro)
-'''
+```
 
 ## 🚀 Instalación y Ejecución Local
 
