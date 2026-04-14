@@ -42,16 +42,19 @@ Sistema inteligente para gestión de almacenes gastronómicos con control de cad
 ## 🚀 Instalación y Ejecución Local
 
 ### Backend (Django)
+``` bash
 cd backend
 python -m venv venv
 source venv/Scripts/activate  # En Git Bash
 pip install -r requirements.txt
 python manage.py migrate
 python manage.py runserver
+```
 
 ### Frontend (React)
+``` bash
 cd frontend
 npm install
 npm run dev
-
+```
 
