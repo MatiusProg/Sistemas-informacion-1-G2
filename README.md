@@ -1,7 +1,7 @@
 # 🍲 Sistema de Gestión de Almacenes Gastronómicos - SI1
 
 **Grupo 2 - INF342 - Semestre 1-2026**
-**Universidad Autónoma Gabriel René Moreno / UNIVALLE**
+**Universidad Autónoma Gabriel René Moreno**
 
 ## 📋 Descripción
 Sistema inteligente para gestión de almacenes gastronómicos con control de caducidad, merma, estacionalidad y proveedores. Desarrollado como proyecto académico para la materia INF342 - Sistemas de Información I.
@@ -58,3 +58,24 @@ npm install
 npm run dev
 ```
 
+## 📊 Variables de Entorno Requeridas
+
+Crear un archivo `.env` en la carpeta `backend/` con el siguiente formato:
+``` bash
+SUPABASE_URL=https://tu-proyecto.supabase.co
+SUPABASE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+SECRET_KEY=django-insecure-xxxxxxxxxxxxx
+DEBUG=True
+```
+
+
+Crear un archivo `.env` en la carpeta `frontend/` con el siguiente formato:
+``` bash
+VITE_SUPABASE_URL=https://tu-proyecto.supabase.co
+VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+VITE_API_URL=http://localhost:8000/api
+```
+
+**⚠️ IMPORTANTE:** Estos archivos `.env` **NO se suben a GitHub**. 
+Cada desarrollador debe crear el suyo localmente con las claves reales del proyecto Supabase del equipo.
+No se registran porque lso .env, se ignoran, debido al .gitignore
