@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ?? Sistema de Gestion de Almacenes Gastronomicos - SI1
 
 **Grupo 2 - INF342 - Semestre 1-2026**
@@ -5,6 +6,15 @@
 
 ## ?? Descripcion
 Sistema inteligente para gestion de almacenes gastronomicos con control de caducidad, merma, estacionalidad y proveedores. Desarrollado como proyecto academico para la materia INF342 - Sistemas de Informacion I.
+=======
+# ?? Sistema de Gestión de Almacenes Gastron車micos - SI1
+
+**Grupo 2 - INF342 - Semestre 1-2026**
+**Universidad Aut車noma Gabriel Ren谷 Moreno**
+
+## ?? Descripci車n
+Sistema inteligente para gesti車n de almacenes gastron車micos con control de caducidad, merma, estacionalidad y proveedores. Desarrollado como proyecto acad谷mico para la materia INF342 - Sistemas de Informaci車n I.
+>>>>>>> d9616b08cc6eb504ad8045877d9bb221a24ba877
 
 ## ?? Equipo de Desarrollo
 | Nombre | Registro | GitHub |
@@ -15,6 +25,7 @@ Sistema inteligente para gestion de almacenes gastronomicos con control de caduc
 | **Hurtado Castro Luis Mateo** | **222008687** | **@MatiusProg** |
 | Ortega Mancilla Karen Paola | 222056592 | @KarenOrtegaM |
 
+<<<<<<< HEAD
 ## ??? Stack Tecnologico
 | Capa | Tecnologia | Justificacion |
 |------|------------|---------------|
@@ -40,21 +51,58 @@ Sistema inteligente para gestion de almacenes gastronomicos con control de caduc
 ```
 
 ## ?? Instalacion y Ejecucion Local
+=======
+## ??? Stack Tecnol車gico
+| Capa | Tecnolog穩a | Justificaci車n |
+|------|------------|---------------|
+| **Frontend** | React + Vite + JavaScript | Exportable desde Lovable, hot-reload r芍pido |
+| **Backend** | Django + Django REST Framework | ORM robusto, panel admin autom芍tico, baja curva |
+| **Base de Datos** | Supabase (PostgreSQL) | PostgreSQL real, autenticaci車n integrada, gratis |
+| **Autenticaci車n** | Supabase Auth | �nica fuente de verdad, RLS nativo |
+| **Hosting** | Railway (Plan Free �?Hobby) | Sin cold starts, soporte nativo para Django |
+
+## ?? Estructura del Proyecto
+``` bash
+念岸岸 backend/ # Aplicaci車n Django (API REST)
+岫 念岸岸 venv/ # Entorno virtual (NO se sube a Git)
+岫 念岸岸 nucleo/ # Configuraci車n principal de Django
+岫 念岸岸 usuarios/ # App de autenticaci車n
+岫 念岸岸 manage.py # Comandos de Django
+岫 弩岸岸 requirements.txt # Dependencias Python
+念岸岸 frontend/ # Aplicaci車n React + Vite
+念岸岸 docs/ # Documentaci車n del proyecto
+岫 念岸岸 diagramas/ # Diagramas UML, Ishikawa, Relacionales
+岫 弩岸岸 informes/ # Avances, Entrevistas, An芍lisis
+弩岸岸 .github/ # Configuraci車n de CI/CD (futuro)
+```
+
+## ?? Instalaci車n y Ejecuci車n Local
+>>>>>>> d9616b08cc6eb504ad8045877d9bb221a24ba877
 
 ### Backend (Django)
 
 #### ?? Requisitos Previos
 
+<<<<<<< HEAD
 | Herramienta | Version | Enlace de Descarga |
+=======
+| Herramienta | Versi車n | Enlace de Descarga |
+>>>>>>> d9616b08cc6eb504ad8045877d9bb221a24ba877
 |-------------|---------|-------------------|
 | Python | 3.11+ | [python.org](https://www.python.org/downloads/) |
 | Git | 2.x+ | [git-scm.com](https://git-scm.com/) |
 | Git Bash (Windows) | - | Incluido con Git |
 | **Microsoft C++ Build Tools** | 2022+ | [visualstudio.microsoft.com](https://visualstudio.microsoft.com/visual-cpp-build-tools/) |
 
+<<<<<<< HEAD
 > ?? **IMPORTANTE (Windows):** Debes instalar **Microsoft C++ Build Tools** marcando la opcion *"Desarrollo para escritorio con C++"*. Esto es necesario para compilar `pyiceberg`. Sin esto, la instalacion fallara.
 
 ####  Instalacion Paso a Paso
+=======
+> ?? **IMPORTANTE (Windows):** Debes instalar **Microsoft C++ Build Tools** marcando la opci車n *"Desarrollo para escritorio con C++"*. Esto es necesario para compilar `pyiceberg`. Sin esto, la instalaci車n fallar芍.
+
+#### ?? Instalaci車n Paso a Paso
+>>>>>>> d9616b08cc6eb504ad8045877d9bb221a24ba877
 
 1. **Clonar el repositorio:**
 	```bash
@@ -80,7 +128,11 @@ Sistema inteligente para gestion de almacenes gastronomicos con control de caduc
 	# Este paso puede tardar 3-5 minutos la primera vez.
 	```
 	
+<<<<<<< HEAD
 5. **Verificar instalacion:**
+=======
+5. **Verificar instalaci車n:**
+>>>>>>> d9616b08cc6eb504ad8045877d9bb221a24ba877
 	``` bash
 	python -c "from supabase import create_client; print(' Backend listo')"
 	
@@ -109,11 +161,19 @@ Sistema inteligente para gestion de almacenes gastronomicos con control de caduc
 9. **Probar en navegador:**
 	- Abrir http://127.0.0.1:8000/
 
+<<<<<<< HEAD
 	- Debe verse la pagina de bienvenida de Django ( cohete).
 	
 **?? Solucion de Problemas Comunes**
 
 | Error	| Causa Probable | Solucion |
+=======
+	- Debe verse la p芍gina de bienvenida de Django (?? cohete).
+	
+**?? Soluci車n de Problemas Comunes**
+
+| Error	| Causa Probable | Soluci車n |
+>>>>>>> d9616b08cc6eb504ad8045877d9bb221a24ba877
 | -----	| -------------- | -------- |
 | ModuleNotFoundError: No module named 'supabase' | Dependencias no instaladas | Ejecutar pip install -r requirements.txt |
 | error: Microsoft Visual C++ 14.0 or greater is required | Falta C++ Build Tools | Instalar desde este enlace |
