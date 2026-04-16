@@ -42,15 +42,80 @@ Sistema inteligente para gestión de almacenes gastronómicos con control de cad
 ## 🚀 Instalación y Ejecución Local
 
 ### Backend (Django)
-``` bash
-cd backend
+
+#### 📋 Requisitos Previos
+
+| Herramienta | Versión | Enlace de Descarga |
+|-------------|---------|-------------------|
+| Python | 3.11+ | [python.org](https://www.python.org/downloads/) |
+| Git | 2.x+ | [git-scm.com](https://git-scm.com/) |
+| Git Bash (Windows) | - | Incluido con Git |
+| **Microsoft C++ Build Tools** | 2022+ | [visualstudio.microsoft.com](https://visualstudio.microsoft.com/visual-cpp-build-tools/) |
+
+> ⚠️ **IMPORTANTE (Windows):** Debes instalar **Microsoft C++ Build Tools** marcando la opción *"Desarrollo para escritorio con C++"*. Esto es necesario para compilar `pyiceberg`. Sin esto, la instalación fallará.
+
+#### 🔧 Instalación Paso a Paso
+
+1. **Clonar el repositorio:**
+ ```bash
+ git clone https://github.com/MatiusProg/Sistemas-informacion-1-G2.git
+ cd Sistemas-informacion-1-G2/backend
+```
+
+2. **Crear y activar entorno virtual:**
+```bash
 python -m venv venv
-source venv/Scripts/activate  # En Git Bash
+source venv/Scripts/activate  # En Git Bash (Windows)
+# En Mac/Linux: source venv/bin/activate
+```
+
+3. **Actualizar pip (opcional pero recomendado):**
+```bash
+python -m pip install --upgrade pip
+```
+
+4. **Instalar dependencias:**
+```bash
 pip install -r requirements.txt
+```
+⏱️ Este paso puede tardar 3-5 minutos la primera vez.
+
+5. **Verificar instalación:**
+```bash
+python -c "from supabase import create_client; print('✅ Backend listo')"
+```
+Debe mostrar: ✅ Backend listo
+
+6. **Configurar variables de entorno:**
+- Copiar el archivo .env.example a .env:
+```bash
+cp .env.example .env
+```
+- Solicitar al Tech Lead (Mateo) las credenciales REALES.
+- Editar .env con las credenciales proporcionadas.
+
+7. **Ejecutar migraciones:**
+```bash
 python manage.py migrate
+```
+
+8. **Iniciar servidor de desarrollo:**
+```bash
 python manage.py runserver
 ```
 
+9. **Probar en navegador:**
+- Abrir http://127.0.0.1:8000/
+- Debe verse la página de bienvenida de Django (🚀 cohete).
+
+**🩺 Solución de Problemas Comunes**
+| Error | Causa Probable | Solución |
+| ModuleNotFoundError: No module named 'supabase' | Dependencias no instaladas | Ejecutar pip install -r requirements.txt |
+| error: Microsoft Visual C++ 14.0 or greater is required | Falta C++ Build Tools | Instalar desde este enlace |
+| (venv) no aparece en el prompt | Entorno virtual no activado | Ejecutar source venv/Scripts/activate |
+| Error loading MySQLdb module | No usamos MySQL | Ignorar (es un warning inofensivo) |
+| Connection refused al probar login | Supabase no configurado | Verificar .env con credenciales correctas |
+   
 ### Frontend (React)
 ``` bash
 cd frontend
