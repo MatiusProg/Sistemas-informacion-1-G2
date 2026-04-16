@@ -1,3 +1,3 @@
-# Frontend React + Vite
+# Welcome to your Lovable project
 
-Interfaz de usuario del Sistema de Gestión de Almacenes Gastronómicos.
+TODO: Document your project here
