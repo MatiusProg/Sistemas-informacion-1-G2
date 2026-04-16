@@ -1,10 +1,10 @@
-# ?? Sistema de Gestion de Almacenes Gastronomicos - SI1
+# ?? Sistema de Gesti¨®n de Almacenes Gastron¨®micos - SI1
 
 **Grupo 2 - INF342 - Semestre 1-2026**
-**Universidad Autonoma Gabriel Rene Moreno**
+**Universidad Aut¨®noma Gabriel Ren¨¦ Moreno**
 
-## ?? Descripcion
-Sistema inteligente para gestion de almacenes gastronomicos con control de caducidad, merma, estacionalidad y proveedores. Desarrollado como proyecto academico para la materia INF342 - Sistemas de Informacion I.
+## ?? Descripci¨®n
+Sistema inteligente para gesti¨®n de almacenes gastron¨®micos con control de caducidad, merma, estacionalidad y proveedores. Desarrollado como proyecto acad¨¦mico para la materia INF342 - Sistemas de Informaci¨®n I.
 
 ## ?? Equipo de Desarrollo
 | Nombre | Registro | GitHub |
@@ -15,46 +15,46 @@ Sistema inteligente para gestion de almacenes gastronomicos con control de caduc
 | **Hurtado Castro Luis Mateo** | **222008687** | **@MatiusProg** |
 | Ortega Mancilla Karen Paola | 222056592 | @KarenOrtegaM |
 
-## ??? Stack Tecnologico
-| Capa | Tecnologia | Justificacion |
+## ??? Stack Tecnol¨®gico
+| Capa | TecnologÃ­a | Justificaci¨®n |
 |------|------------|---------------|
-| **Frontend** | React + Vite + JavaScript | Exportable desde Lovable, hot-reload rapido |
-| **Backend** | Django + Django REST Framework | ORM robusto, panel admin automatico, baja curva |
-| **Base de Datos** | Supabase (PostgreSQL) | PostgreSQL real, autenticacion integrada, gratis |
-| **Autenticacion** | Supabase Auth | Unica fuente de verdad, RLS nativo |
-| **Hosting** | Railway (Plan Free ¡÷ Hobby) | Sin cold starts, soporte nativo para Django |
+| **Frontend** | React + Vite + JavaScript | Exportable desde Lovable, hot-reload r¨¢pido |
+| **Backend** | Django + Django REST Framework | ORM robusto, panel admin autom¨¢tico, baja curva |
+| **Base de Datos** | Supabase (PostgreSQL) | PostgreSQL real, autenticaci¨®n integrada, gratis |
+| **Autenticaci¨®n** | Supabase Auth | Ãšnica fuente de verdad, RLS nativo |
+| **Hosting** | Railway (Plan Free â†?Hobby) | Sin cold starts, soporte nativo para Django |
 
 ## ?? Estructura del Proyecto
 ``` bash
-¢u¢w¢w backend/ # Aplicacion Django (API REST)
-¢x ¢u¢w¢w venv/ # Entorno virtual (NO se sube a Git)
-¢x ¢u¢w¢w nucleo/ # Configuracion principal de Django
-¢x ¢u¢w¢w usuarios/ # App de autenticacion
-¢x ¢u¢w¢w manage.py # Comandos de Django
-¢x ¢|¢w¢w requirements.txt # Dependencias Python
-¢u¢w¢w frontend/ # Aplicacion React + Vite
-¢u¢w¢w docs/ # Documentacion del proyecto
-¢x ¢u¢w¢w diagramas/ # Diagramas UML, Ishikawa, Relacionales
-¢x ¢|¢w¢w informes/ # Avances, Entrevistas, Analisis
-¢|¢w¢w .github/ # Configuracion de CI/CD (futuro)
+©À©¤©¤ backend/ # Aplicaci¨®n Django (API REST)
+©¦ ©À©¤©¤ venv/ # Entorno virtual (NO se sube a Git)
+©¦ ©À©¤©¤ nucleo/ # Configuraci¨®n principal de Django
+©¦ ©À©¤©¤ usuarios/ # App de autenticaci¨®n
+©¦ ©À©¤©¤ manage.py # Comandos de Django
+©¦ ©¸©¤©¤ requirements.txt # Dependencias Python
+©À©¤©¤ frontend/ # Aplicaci¨®n React + Vite
+©À©¤©¤ docs/ # Documentaci¨®n del proyecto
+©¦ ©À©¤©¤ diagramas/ # Diagramas UML, Ishikawa, Relacionales
+©¦ ©¸©¤©¤ informes/ # Avances, Entrevistas, An¨¢lisis
+©¸©¤©¤ .github/ # Configuraci¨®n de CI/CD (futuro)
 ```
 
-## ?? Instalacion y Ejecucion Local
+## ?? Instalaci¨®n y Ejecuci¨®n Local
 
 ### Backend (Django)
 
 #### ?? Requisitos Previos
 
-| Herramienta | Version | Enlace de Descarga |
+| Herramienta | Versi¨®n | Enlace de Descarga |
 |-------------|---------|-------------------|
 | Python | 3.11+ | [python.org](https://www.python.org/downloads/) |
 | Git | 2.x+ | [git-scm.com](https://git-scm.com/) |
 | Git Bash (Windows) | - | Incluido con Git |
 | **Microsoft C++ Build Tools** | 2022+ | [visualstudio.microsoft.com](https://visualstudio.microsoft.com/visual-cpp-build-tools/) |
 
-> ?? **IMPORTANTE (Windows):** Debes instalar **Microsoft C++ Build Tools** marcando la opcion *"Desarrollo para escritorio con C++"*. Esto es necesario para compilar `pyiceberg`. Sin esto, la instalacion fallara.
+> ?? **IMPORTANTE (Windows):** Debes instalar **Microsoft C++ Build Tools** marcando la opci¨®n *"Desarrollo para escritorio con C++"*. Esto es necesario para compilar `pyiceberg`. Sin esto, la instalaci¨®n fallar¨¢.
 
-####  Instalacion Paso a Paso
+#### ?? Instalaci¨®n Paso a Paso
 
 1. **Clonar el repositorio:**
 	```bash
@@ -77,14 +77,14 @@ Sistema inteligente para gestion de almacenes gastronomicos con control de caduc
 	``` bash
 	pip install -r requirements.txt
 	
-	# Este paso puede tardar 3-5 minutos la primera vez.
+	#?? Este paso puede tardar 3-5 minutos la primera vez.
 	```
 	
-5. **Verificar instalacion:**
+5. **Verificar instalaci¨®n:**
 	``` bash
-	python -c "from supabase import create_client; print(' Backend listo')"
+	python -c "from supabase import create_client; print('? Backend listo')"
 	
-	# Debe mostrar:  Backend listo
+	# Debe mostrar: ? Backend listo
 	```
 
 6. **Configurar variables de entorno:**
@@ -109,11 +109,11 @@ Sistema inteligente para gestion de almacenes gastronomicos con control de caduc
 9. **Probar en navegador:**
 	- Abrir http://127.0.0.1:8000/
 
-	- Debe verse la pagina de bienvenida de Django ( cohete).
+	- Debe verse la p¨¢gina de bienvenida de Django (?? cohete).
 	
-**?? Solucion de Problemas Comunes**
+**?? Soluci¨®n de Problemas Comunes**
 
-| Error	| Causa Probable | Solucion |
+| Error	| Causa Probable | Soluci¨®n |
 | -----	| -------------- | -------- |
 | ModuleNotFoundError: No module named 'supabase' | Dependencias no instaladas | Ejecutar pip install -r requirements.txt |
 | error: Microsoft Visual C++ 14.0 or greater is required | Falta C++ Build Tools | Instalar desde este enlace |
@@ -129,7 +129,7 @@ npm install
 npm run dev
 ```
 
-##  ?? Variables de Entorno Requeridas
+## ?? Variables de Entorno Requeridas
 
 Crear un archivo `.env` en la carpeta `backend/` con el siguiente formato:
 ``` bash
