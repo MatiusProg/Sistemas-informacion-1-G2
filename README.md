@@ -110,6 +110,7 @@ python manage.py runserver
 
 **🩺 Solución de Problemas Comunes**
 | Error | Causa Probable | Solución |
+|-------| -------------- | -------- |
 | ModuleNotFoundError: No module named 'supabase' | Dependencias no instaladas | Ejecutar pip install -r requirements.txt |
 | error: Microsoft Visual C++ 14.0 or greater is required | Falta C++ Build Tools | Instalar desde este enlace |
 | (venv) no aparece en el prompt | Entorno virtual no activado | Ejecutar source venv/Scripts/activate |
