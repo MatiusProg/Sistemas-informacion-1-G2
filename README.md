@@ -1,22 +1,12 @@
-<<<<<<< HEAD
-# ?? Sistema de Gestion de Almacenes Gastronomicos - SI1
+# 🍲 Sistema de Gestión de Almacenes Gastronómicos - SI1
 
 **Grupo 2 - INF342 - Semestre 1-2026**
-**Universidad Autonoma Gabriel Rene Moreno**
+**Universidad Autónoma Gabriel René Moreno**
 
-## ?? Descripcion
-Sistema inteligente para gestion de almacenes gastronomicos con control de caducidad, merma, estacionalidad y proveedores. Desarrollado como proyecto academico para la materia INF342 - Sistemas de Informacion I.
-=======
-# ?? Sistema de Gestión de Almacenes Gastron車micos - SI1
+## 📋 Descripción
+Sistema inteligente para gestión de almacenes gastronómicos con control de caducidad, merma, estacionalidad y proveedores. Desarrollado como proyecto académico para la materia INF342 - Sistemas de Información I.
 
-**Grupo 2 - INF342 - Semestre 1-2026**
-**Universidad Aut車noma Gabriel Ren谷 Moreno**
-
-## ?? Descripci車n
-Sistema inteligente para gesti車n de almacenes gastron車micos con control de caducidad, merma, estacionalidad y proveedores. Desarrollado como proyecto acad谷mico para la materia INF342 - Sistemas de Informaci車n I.
->>>>>>> d9616b08cc6eb504ad8045877d9bb221a24ba877
-
-## ?? Equipo de Desarrollo
+## 👥 Equipo de Desarrollo
 | Nombre | Registro | GitHub |
 |--------|----------|--------|
 | Andrade Nova Marcos David | 223041505 | @MarcosAndradeNova |
@@ -25,162 +15,41 @@ Sistema inteligente para gesti車n de almacenes gastron車micos con control de c
 | **Hurtado Castro Luis Mateo** | **222008687** | **@MatiusProg** |
 | Ortega Mancilla Karen Paola | 222056592 | @KarenOrtegaM |
 
-<<<<<<< HEAD
-## ??? Stack Tecnologico
-| Capa | Tecnologia | Justificacion |
+## 🛠️ Stack Tecnológico
+| Capa | Tecnología | Justificación |
 |------|------------|---------------|
-| **Frontend** | React + Vite + JavaScript | Exportable desde Lovable, hot-reload rapido |
-| **Backend** | Django + Django REST Framework | ORM robusto, panel admin automatico, baja curva |
-| **Base de Datos** | Supabase (PostgreSQL) | PostgreSQL real, autenticacion integrada, gratis |
-| **Autenticacion** | Supabase Auth | Unica fuente de verdad, RLS nativo |
-| **Hosting** | Railway (Plan Free �� Hobby) | Sin cold starts, soporte nativo para Django |
+| **Frontend** | React + Vite + JavaScript | Exportable desde Lovable, hot-reload rápido |
+| **Backend** | Django + Django REST Framework | ORM robusto, panel admin automático, baja curva |
+| **Base de Datos** | Supabase (PostgreSQL) | PostgreSQL real, autenticación integrada, gratis |
+| **Autenticación** | Supabase Auth | Única fuente de verdad, RLS nativo |
+| **Hosting** | Railway (Plan Free → Hobby) | Sin cold starts, soporte nativo para Django |
 
-## ?? Estructura del Proyecto
+## 📁 Estructura del Proyecto
 ``` bash
-�u�w�w backend/ # Aplicacion Django (API REST)
-�x �u�w�w venv/ # Entorno virtual (NO se sube a Git)
-�x �u�w�w nucleo/ # Configuracion principal de Django
-�x �u�w�w usuarios/ # App de autenticacion
-�x �u�w�w manage.py # Comandos de Django
-�x �|�w�w requirements.txt # Dependencias Python
-�u�w�w frontend/ # Aplicacion React + Vite
-�u�w�w docs/ # Documentacion del proyecto
-�x �u�w�w diagramas/ # Diagramas UML, Ishikawa, Relacionales
-�x �|�w�w informes/ # Avances, Entrevistas, Analisis
-�|�w�w .github/ # Configuracion de CI/CD (futuro)
+├── backend/ # Aplicación Django (API REST)
+│ ├── venv/ # Entorno virtual (NO se sube a Git)
+│ ├── nucleo/ # Configuración principal de Django
+│ ├── usuarios/ # App de autenticación
+│ ├── manage.py # Comandos de Django
+│ └── requirements.txt # Dependencias Python
+├── frontend/ # Aplicación React + Vite
+├── docs/ # Documentación del proyecto
+│ ├── diagramas/ # Diagramas UML, Ishikawa, Relacionales
+│ └── informes/ # Avances, Entrevistas, Análisis
+└── .github/ # Configuración de CI/CD (futuro)
 ```
 
-## ?? Instalacion y Ejecucion Local
-=======
-## ??? Stack Tecnol車gico
-| Capa | Tecnolog穩a | Justificaci車n |
-|------|------------|---------------|
-| **Frontend** | React + Vite + JavaScript | Exportable desde Lovable, hot-reload r芍pido |
-| **Backend** | Django + Django REST Framework | ORM robusto, panel admin autom芍tico, baja curva |
-| **Base de Datos** | Supabase (PostgreSQL) | PostgreSQL real, autenticaci車n integrada, gratis |
-| **Autenticaci車n** | Supabase Auth | �nica fuente de verdad, RLS nativo |
-| **Hosting** | Railway (Plan Free �?Hobby) | Sin cold starts, soporte nativo para Django |
-
-## ?? Estructura del Proyecto
-``` bash
-念岸岸 backend/ # Aplicaci車n Django (API REST)
-岫 念岸岸 venv/ # Entorno virtual (NO se sube a Git)
-岫 念岸岸 nucleo/ # Configuraci車n principal de Django
-岫 念岸岸 usuarios/ # App de autenticaci車n
-岫 念岸岸 manage.py # Comandos de Django
-岫 弩岸岸 requirements.txt # Dependencias Python
-念岸岸 frontend/ # Aplicaci車n React + Vite
-念岸岸 docs/ # Documentaci車n del proyecto
-岫 念岸岸 diagramas/ # Diagramas UML, Ishikawa, Relacionales
-岫 弩岸岸 informes/ # Avances, Entrevistas, An芍lisis
-弩岸岸 .github/ # Configuraci車n de CI/CD (futuro)
-```
-
-## ?? Instalaci車n y Ejecuci車n Local
->>>>>>> d9616b08cc6eb504ad8045877d9bb221a24ba877
+## 🚀 Instalación y Ejecución Local
 
 ### Backend (Django)
-
-#### ?? Requisitos Previos
-
-<<<<<<< HEAD
-| Herramienta | Version | Enlace de Descarga |
-=======
-| Herramienta | Versi車n | Enlace de Descarga |
->>>>>>> d9616b08cc6eb504ad8045877d9bb221a24ba877
-|-------------|---------|-------------------|
-| Python | 3.11+ | [python.org](https://www.python.org/downloads/) |
-| Git | 2.x+ | [git-scm.com](https://git-scm.com/) |
-| Git Bash (Windows) | - | Incluido con Git |
-| **Microsoft C++ Build Tools** | 2022+ | [visualstudio.microsoft.com](https://visualstudio.microsoft.com/visual-cpp-build-tools/) |
-
-<<<<<<< HEAD
-> ?? **IMPORTANTE (Windows):** Debes instalar **Microsoft C++ Build Tools** marcando la opcion *"Desarrollo para escritorio con C++"*. Esto es necesario para compilar `pyiceberg`. Sin esto, la instalacion fallara.
-
-####  Instalacion Paso a Paso
-=======
-> ?? **IMPORTANTE (Windows):** Debes instalar **Microsoft C++ Build Tools** marcando la opci車n *"Desarrollo para escritorio con C++"*. Esto es necesario para compilar `pyiceberg`. Sin esto, la instalaci車n fallar芍.
-
-#### ?? Instalaci車n Paso a Paso
->>>>>>> d9616b08cc6eb504ad8045877d9bb221a24ba877
-
-1. **Clonar el repositorio:**
-	```bash
-	git clone https://github.com/MatiusProg/Sistemas-informacion-1-G2.git
-	cd Sistemas-informacion-1-G2/backend
-	```
-2. **Crear y activar entorno virtual:**
-	``` bash
-	python -m venv venv
-	source venv/Scripts/activate  # En Git Bash (Windows)
-	# En Mac/Linux: source venv/bin/activate
-	```
-
-3. **Actualizar pip (opcional pero recomendado):**
-	``` bash
-	python -m pip install --upgrade pip
-	```
-	
-4. **Instalar dependencias:**
-	``` bash
-	pip install -r requirements.txt
-	
-	# Este paso puede tardar 3-5 minutos la primera vez.
-	```
-	
-<<<<<<< HEAD
-5. **Verificar instalacion:**
-=======
-5. **Verificar instalaci車n:**
->>>>>>> d9616b08cc6eb504ad8045877d9bb221a24ba877
-	``` bash
-	python -c "from supabase import create_client; print(' Backend listo')"
-	
-	# Debe mostrar:  Backend listo
-	```
-
-6. **Configurar variables de entorno:**
-	- Copiar el archivo .env.example a .env:
-	``` bash
-	cp .env.example .env
-	```	
-	- Solicitar al Tech Lead (Mateo) las credenciales REALES.
-
-	- Editar .env con las credenciales proporcionadas.
-	
-7. **Ejecutar migraciones:**
-	``` bash
-	python manage.py migrate
-	```
-	
-8. **Iniciar servidor de desarrollo:**
-	``` bash
-	python manage.py runserver
-	```
-
-9. **Probar en navegador:**
-	- Abrir http://127.0.0.1:8000/
-
-<<<<<<< HEAD
-	- Debe verse la pagina de bienvenida de Django ( cohete).
-	
-**?? Solucion de Problemas Comunes**
-
-| Error	| Causa Probable | Solucion |
-=======
-	- Debe verse la p芍gina de bienvenida de Django (?? cohete).
-	
-**?? Soluci車n de Problemas Comunes**
-
-| Error	| Causa Probable | Soluci車n |
->>>>>>> d9616b08cc6eb504ad8045877d9bb221a24ba877
-| -----	| -------------- | -------- |
-| ModuleNotFoundError: No module named 'supabase' | Dependencias no instaladas | Ejecutar pip install -r requirements.txt |
-| error: Microsoft Visual C++ 14.0 or greater is required | Falta C++ Build Tools | Instalar desde este enlace |
-| (venv) no aparece en el prompt | Entorno virtual no activado | Ejecutar source venv/Scripts/activate |
-| Error loading MySQLdb module | No usamos MySQL | Ignorar (es un warning inofensivo) |
-| Connection refused al probar login | Supabase no configurado | Verificar .env con credenciales correctas |
-
+``` bash
+cd backend
+python -m venv venv
+source venv/Scripts/activate  # En Git Bash
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py runserver
+```
 
 ### Frontend (React)
 ``` bash
@@ -189,7 +58,7 @@ npm install
 npm run dev
 ```
 
-##  ?? Variables de Entorno Requeridas
+## 📊 Variables de Entorno Requeridas
 
 Crear un archivo `.env` en la carpeta `backend/` con el siguiente formato:
 ``` bash
@@ -207,6 +76,6 @@ VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 VITE_API_URL=http://localhost:8000/api
 ```
 
-**?? IMPORTANTE:** Estos archivos `.env` **NO se suben a GitHub**. 
+**⚠️ IMPORTANTE:** Estos archivos `.env` **NO se suben a GitHub**. 
 Cada desarrollador debe crear el suyo localmente con las claves reales del proyecto Supabase del equipo.
 No se registran porque lso .env, se ignoran, debido al .gitignore
