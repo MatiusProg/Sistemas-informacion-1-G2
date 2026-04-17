@@ -35,10 +35,23 @@ class SupabaseAuthentication(authentication.BaseAuthentication):
             if not user_response.user:
                 raise exceptions.AuthenticationFailed('Token invalido o expirado')
             
-            # 4. Crear un objeto usuario simple para DRF
+            # 4. Obtener el rol desde la tabla usuario
+            user_id = user_response.user.id
+            profile_response = supabase.table('usuario').select('rol, nombre').eq('id', user_id).execute()
+            
+            rol = 'usuario'  # valor por defecto
+            nombre = user_response.user.email.split('@')[0]
+            
+            if profile_response.data:
+                rol = profile_response.data[0].get('rol', 'usuario')
+                nombre = profile_response.data[0].get('nombre', nombre)
+            
+            # 5. Crear un objeto usuario simple para DRF CON EL ROL
             user = type('User', (), {
                 'id': user_response.user.id,
                 'email': user_response.user.email,
+                'nombre': nombre,
+                'rol': rol,  # <-- ¡AÑADIMOS EL ROL!
                 'is_authenticated': True,
             })()
             

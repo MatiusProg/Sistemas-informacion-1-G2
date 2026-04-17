@@ -11,7 +11,7 @@ export default function AppHeader() {
 
   if (!user) return null;
 
-  const isChef = user.role === "chef";
+  const isChef = user.rol === "chef";
 
   return (
     <header className="bg-card border-b border-border shadow-card sticky top-0 z-40">
@@ -26,7 +26,7 @@ export default function AppHeader() {
           >
             <UserIcon className="mr-2 h-5 w-5" /> Perfil
           </Button>
-          {user.role === "admin" && (
+          {user.rol === "administrador" && (
             <Button
               variant={pathname === "/admin" ? "default" : "ghost"}
               onClick={() => navigate("/admin")}

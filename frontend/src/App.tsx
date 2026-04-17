@@ -28,7 +28,7 @@ const App = () => (
             <Route path="/registro" element={<Register />} />
             <Route path="/recuperar" element={<ForgotPassword />} />
             <Route path="/perfil" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-            <Route path="/admin" element={<ProtectedRoute roles={["admin"]}><AdminUsers /></ProtectedRoute>} />
+            <Route path="/admin" element={<ProtectedRoute roles={["administrador"]}><AdminUsers /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>

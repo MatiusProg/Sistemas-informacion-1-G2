@@ -1,9 +1,11 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import AllowAny
 from supabase import create_client
 from django.conf import settings
+from django.http import Http404
 import logging
 
 from .serializers import LoginSerializer, RegisterSerializer, ResetPasswordSerializer
@@ -191,3 +193,147 @@ class UserProfileView(APIView):
         except Exception as e:
             logger.error(f"Error obteniendo perfil: {str(e)}")
             return Response({'error': 'Error al obtener perfil'}, status=status.HTTP_400_BAD_REQUEST)
+        
+class UserListView(APIView):
+    """
+    Lista todos los usuarios (solo para administradores).
+    GET /api/auth/users/
+    """
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        # Verificar que el usuario es administrador
+        # NOTA: request.user.rol viene del objeto que creamos en SupabaseAuthentication
+        if not hasattr(request.user, 'rol') or request.user.rol != 'administrador':
+            return Response(
+                {'error': 'No tienes permiso para ver esta lista'}, 
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        try:
+            supabase = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
+            response = supabase.table('usuario').select('*').execute()
+            
+            return Response(response.data, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            # IMPRIMIR EL ERROR COMPLETO EN LA CONSOLA
+            import traceback
+            print("=" * 50)
+            print("ERROR EN UserListView:")
+            traceback.print_exc()
+            print("=" * 50)
+            logger.error(f"Error listando usuarios: {str(e)}")
+            return Response(
+                {'error': f'Error al obtener la lista de usuarios: {str(e)}'}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+class ChangeUserRoleView(APIView):
+    """
+    Cambia el rol de un usuario (solo para administradores).
+    PATCH /api/auth/users/<uuid:id>/role/
+    Body: { "rol": "chef" | "administrador" | "usuario" }
+    """
+    permission_classes = [IsAuthenticated]
+    
+    def patch(self, request, user_id):
+        # Verificar que el usuario es administrador
+        if request.user.rol != 'administrador':
+            return Response(
+                {'error': 'No tienes permiso para cambiar roles'}, 
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        nuevo_rol = request.data.get('rol')
+        if nuevo_rol not in ['chef', 'administrador', 'usuario']:
+            return Response(
+                {'error': 'Rol inválido'}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # No permitir cambiarse el rol a sí mismo
+        if str(request.user.id) == str(user_id):
+            return Response(
+                {'error': 'No puedes cambiar tu propio rol'}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        try:
+            supabase = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
+            
+            # SOLO actualizar la tabla usuario (no tocar auth.users)
+            response = supabase.table('usuario').update({
+                'rol': nuevo_rol
+            }).eq('id', str(user_id)).execute()
+            
+            if not response.data:
+                raise Http404("Usuario no encontrado")
+            
+            return Response({
+                'message': 'Rol actualizado exitosamente',
+                'user': response.data[0]
+            }, status=status.HTTP_200_OK)
+            
+        except Http404:
+            raise
+        except Exception as e:
+            logger.error(f"Error cambiando rol: {str(e)}")
+            return Response(
+                {'error': f'Error al cambiar el rol: {str(e)}'}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+class ToggleUserActiveView(APIView):
+    """
+    Activa/desactiva un usuario (solo para administradores).
+    PATCH /api/auth/users/<uuid:id>/toggle-active/
+    """
+    permission_classes = [IsAuthenticated]
+    
+    def patch(self, request, user_id):
+        # Verificar que el usuario es administrador
+        if request.user.rol != 'administrador':
+            return Response(
+                {'error': 'No tienes permiso para modificar usuarios'}, 
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        # No permitir desactivarse a sí mismo
+        if str(request.user.id) == str(user_id):
+            return Response(
+                {'error': 'No puedes desactivar tu propia cuenta'}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        try:
+            supabase = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
+            
+            # Obtener estado actual
+            user_response = supabase.table('usuario').select('activo').eq('id', str(user_id)).execute()
+            if not user_response.data:
+                raise Http404("Usuario no encontrado")
+            
+            current_active = user_response.data[0].get('activo', True)
+            new_active = not current_active
+            
+            # SOLO actualizar la tabla usuario (no tocar auth.users)
+            response = supabase.table('usuario').update({
+                'activo': new_active
+            }).eq('id', str(user_id)).execute()
+            
+            return Response({
+                'message': f'Usuario {"activado" if new_active else "desactivado"} exitosamente',
+                'user': response.data[0]
+            }, status=status.HTTP_200_OK)
+            
+        except Http404:
+            raise
+        except Exception as e:
+            logger.error(f"Error toggle active: {str(e)}")
+            return Response(
+                {'error': f'Error al cambiar el estado: {str(e)}'}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
