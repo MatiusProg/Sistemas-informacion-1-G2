@@ -9,7 +9,7 @@ export default function Logo({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
         <ChefHat className="h-1/2 w-1/2 text-primary-foreground" />
       </div>
       <span className={`${text} font-bold tracking-tight text-foreground`} style={{ fontFamily: "'Playfair Display', serif" }}>
-        CocinaStock
+        Pulso
       </span>
     </div>
   );

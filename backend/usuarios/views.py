@@ -36,7 +36,17 @@ class LoginView(APIView):
                 'email': email,
                 'password': password
             })
-            
+            # Verificar si el usuario está activo en nuestra tabla
+            user_id = auth_response.user.id
+            profile = supabase.table('usuario').select('activo', 'rol', 'nombre').eq('id', user_id).execute()
+
+            if profile.data and profile.data[0].get('activo') == False:
+                # Cerrar sesión inmediatamente
+                supabase.auth.sign_out()
+                return Response({
+                    'error': 'Tu cuenta ha sido desactivada. Contacta al administrador.'
+                }, status=status.HTTP_403_FORBIDDEN)
+
             return Response({
                 'access_token': auth_response.session.access_token,
                 'refresh_token': auth_response.session.refresh_token,
@@ -335,5 +345,132 @@ class ToggleUserActiveView(APIView):
             logger.error(f"Error toggle active: {str(e)}")
             return Response(
                 {'error': f'Error al cambiar el estado: {str(e)}'}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        
+
+class AdminCreateUserView(APIView):
+    """
+    Permite a un administrador crear un nuevo usuario manualmente.
+    POST /api/auth/users/
+    Body: { "email": "...", "password": "...", "nombre": "...", "rol": "..." }
+    """
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request):
+        # Verificar que el usuario es administrador
+        if request.user.rol != 'administrador':
+            return Response(
+                {'error': 'No tienes permiso para crear usuarios'}, 
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        email = request.data.get('email')
+        password = request.data.get('password')
+        nombre = request.data.get('nombre')
+        rol = request.data.get('rol', 'usuario')
+        
+        if not all([email, password, nombre]):
+            return Response(
+                {'error': 'Email, password y nombre son requeridos'}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        if rol not in ['chef', 'administrador', 'usuario']:
+            return Response(
+                {'error': 'Rol inválido'}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        try:
+            supabase = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
+            
+            # Crear usuario en Supabase Auth
+            auth_response = supabase.auth.admin.create_user({
+                'email': email,
+                'password': password,
+                'email_confirm': True,  # Confirmar automáticamente
+                'user_metadata': {'nombre': nombre, 'rol': rol}
+            })
+            
+            # Insertar en tabla usuario
+            supabase.table('usuario').insert({
+                'id': auth_response.user.id,
+                'nombre': nombre,
+                'email': email,
+                'rol': rol,
+                'activo': True
+            }).execute()
+            
+            return Response({
+                'message': 'Usuario creado exitosamente',
+                'user': {
+                    'id': auth_response.user.id,
+                    'email': email,
+                    'nombre': nombre,
+                    'rol': rol
+                }
+            }, status=status.HTTP_201_CREATED)
+            
+        except Exception as e:
+            logger.error(f"Error creando usuario: {str(e)}")
+            return Response(
+                {'error': f'Error al crear usuario: {str(e)}'}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        
+class AdminUpdateUserView(APIView):
+    """
+    Permite a un administrador editar datos básicos de un usuario.
+    PATCH /api/auth/users/<uuid:id>/
+    Body: { "nombre": "...", "email": "..." }
+    """
+    permission_classes = [IsAuthenticated]
+    
+    def patch(self, request, user_id):
+        if request.user.rol != 'administrador':
+            return Response(
+                {'error': 'No tienes permiso para editar usuarios'}, 
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        nombre = request.data.get('nombre')
+        email = request.data.get('email')
+        
+        if not nombre and not email:
+            return Response(
+                {'error': 'Al menos un campo (nombre o email) es requerido'}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        try:
+            supabase = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
+            
+            update_data = {}
+            if nombre:
+                update_data['nombre'] = nombre
+            if email:
+                update_data['email'] = email
+            
+            response = supabase.table('usuario').update(update_data).eq('id', str(user_id)).execute()
+            
+            if not response.data:
+                raise Http404("Usuario no encontrado")
+            
+            # Si cambió el email, actualizar en auth.users
+            if email:
+                supabase.auth.admin.update_user_by_id(str(user_id), {'email': email})
+            
+            return Response({
+                'message': 'Usuario actualizado exitosamente',
+                'user': response.data[0]
+            }, status=status.HTTP_200_OK)
+            
+        except Http404:
+            raise
+        except Exception as e:
+            logger.error(f"Error actualizando usuario: {str(e)}")
+            return Response(
+                {'error': f'Error al actualizar: {str(e)}'}, 
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )

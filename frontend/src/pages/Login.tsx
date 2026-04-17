@@ -86,14 +86,6 @@ export default function Login() {
             <Link to="/registro" className="text-primary font-semibold hover:underline">Regístrate</Link>
           </p>
         </div>
-
-        {/* ✅ Cuentas demo actualizadas con roles correctos */}
-        <div className="rounded-xl bg-secondary/60 p-4 text-xs text-muted-foreground space-y-1 mt-4">
-          <p className="font-semibold text-foreground">Cuentas de prueba:</p>
-          <p>👨‍🍳 chef@cocina.com / chef123</p>
-          <p>🛡️ admin@cocina.com / admin123</p>
-          <p>👤 usuario@cocina.com / usuario123</p>
-        </div>
       </form>
     </AuthLayout>
   );

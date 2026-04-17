@@ -13,14 +13,14 @@ export default function AuthLayout({ children, title, subtitle }: { children: Re
         </div>
         <div className="relative max-w-md">
           <h1 className="text-4xl lg:text-5xl font-bold leading-tight mb-4">
-            La cocina, <span className="text-accent">organizada</span>.
+            Almacén <span className="text-accent">Inteligente</span>.
           </h1>
           <p className="text-primary-foreground/80 text-lg">
-            Gestiona tu almacén gastronómico con una interfaz pensada para chefs, almaceneros y administradores.
+            Gestiona tu almacén gastronómico con control de Merma, Caducidad y Estacionalidad de los insumos
           </p>
         </div>
         <div className="relative text-sm text-primary-foreground/70">
-          © {new Date().getFullYear()} CocinaStock
+          © {new Date().getFullYear()} Inf 342 - SC
         </div>
       </div>
 

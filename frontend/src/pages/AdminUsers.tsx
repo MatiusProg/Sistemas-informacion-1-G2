@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
-import { Users, UserCheck, UserX, ChefHat, ShieldCheck, User } from "lucide-react";
+import { Users, UserCheck, UserX, ChefHat, ShieldCheck, User, UserPlus } from "lucide-react";
 
 // ✅ Roles actualizados
 const ROLE_ICON: Record<Role, React.ElementType> = { 
@@ -31,14 +31,28 @@ export default function AdminUsers() {
     <div className="min-h-screen bg-gradient-soft">
       <AppHeader />
       <main className="container py-8 max-w-6xl">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="h-12 w-12 rounded-2xl bg-primary/10 grid place-items-center">
-            <Users className="h-6 w-6 text-primary" />
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-3">
+            <div className="h-12 w-12 rounded-2xl bg-primary/10 grid place-items-center">
+              <Users className="h-6 w-6 text-primary" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold">Gestión de Usuarios</h1>
+              <p className="text-muted-foreground">Administra roles y estado de las cuentas</p>
+            </div>
           </div>
-          <div>
-            <h1 className="text-3xl font-bold">Gestión de Usuarios</h1>
-            <p className="text-muted-foreground">Administra roles y estado de las cuentas</p>
-          </div>
+          
+          {/* 🔥 BOTÓN CREAR USUARIO */}
+          <Button 
+            size="lg" 
+            className="shadow-soft"
+            onClick={() => {
+              // Por ahora, solo muestra un mensaje
+              toast.info("Funcionalidad de creación de usuarios en desarrollo");
+            }}
+          >
+            <UserPlus className="mr-2 h-5 w-5" /> Crear Usuario
+          </Button>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 my-6">
@@ -75,10 +89,17 @@ export default function AdminUsers() {
                       </span>
                     </TableCell>
                     <TableCell>
-                      <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium bg-success/15 text-success">
-                        <span className="h-2 w-2 rounded-full bg-success" />
-                        Activo
-                      </span>
+                      {u.activo !== false ? (
+                        <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium bg-success/15 text-success">
+                          <span className="h-2 w-2 rounded-full bg-success" />
+                          Activo
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium bg-destructive/15 text-destructive">
+                          <span className="h-2 w-2 rounded-full bg-destructive" />
+                          Inactivo
+                        </span>
+                      )}
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end items-center gap-2">
@@ -100,15 +121,19 @@ export default function AdminUsers() {
                           </SelectContent>
                         </Select>
                         <Button
-                          variant="outline"
+                          variant={u.activo !== false ? "outline" : "default"}
                           size="sm"
                           disabled={isMe}
                           onClick={() => {
                             toggleUserActive(u.id);
-                            toast.success("Usuario desactivado (simulado)");
+                            toast.success(u.activo !== false ? "Usuario desactivado" : "Usuario activado");
                           }}
                         >
-                          <UserX className="mr-1 h-4 w-4" /> Desactivar
+                          {u.activo !== false ? (
+                            <><UserX className="mr-1 h-4 w-4" /> Desactivar</>
+                          ) : (
+                            <><UserCheck className="mr-1 h-4 w-4" /> Activar</>
+                          )}
                         </Button>
                       </div>
                     </TableCell>

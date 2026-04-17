@@ -8,6 +8,8 @@ from .views import (
     UserListView,           # NUEVO
     ChangeUserRoleView,      # NUEVO
     ToggleUserActiveView,    # NUEVO
+    AdminCreateUserView,   # <-- AÑADIR
+    AdminUpdateUserView,   # <-- AÑADIR (si lo creaste)
 )
 
 urlpatterns = [
@@ -21,4 +23,8 @@ urlpatterns = [
     path('auth/users/', UserListView.as_view(), name='user-list'),
     path('auth/users/<uuid:user_id>/role/', ChangeUserRoleView.as_view(), name='change-role'),
     path('auth/users/<uuid:user_id>/toggle-active/', ToggleUserActiveView.as_view(), name='toggle-active'),
+    # En urls.py:
+    path('auth/users/', UserListView.as_view(), name='user-list'),  # GET
+    path('auth/users/create/', AdminCreateUserView.as_view(), name='admin-create-user'),  # POST
+    path('auth/users/<uuid:user_id>/', AdminUpdateUserView.as_view(), name='admin-update-user'),
 ]
