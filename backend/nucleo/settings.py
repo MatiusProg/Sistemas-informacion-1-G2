@@ -128,11 +128,8 @@ STATIC_URL = 'static/'
 # CONFIGURACIÓN PERSONALIZADA
 # ============================================
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
-
-CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', 'http://localhost:8080,http://127.0.0.1:8080').split(',')
-
-CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost:8080').split(',')
+# Permitir peticiones desde cualquier origen (desarrollo local)
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Configuración de Django REST Framework
 REST_FRAMEWORK = {
@@ -146,6 +143,13 @@ REST_FRAMEWORK = {
 
 # Configuración de Supabase (desde variables de entorno)
 import os
+
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', 'http://localhost:8080,http://127.0.0.1:8080').split(',')
+
+CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost:8080').split(',')
+
 from dotenv import load_dotenv
 
 load_dotenv()
