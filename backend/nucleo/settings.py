@@ -128,8 +128,11 @@ STATIC_URL = 'static/'
 # CONFIGURACIÓN PERSONALIZADA
 # ============================================
 
-# Permitir peticiones desde cualquier origen (desarrollo local)
-CORS_ALLOW_ALL_ORIGINS = True
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', 'http://localhost:8080,http://127.0.0.1:8080').split(',')
+
+CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost:8080').split(',')
 
 # Configuración de Django REST Framework
 REST_FRAMEWORK = {
@@ -149,3 +152,4 @@ load_dotenv()
 
 SUPABASE_URL = os.getenv('SUPABASE_URL')
 SUPABASE_KEY = os.getenv('SUPABASE_KEY')
+
