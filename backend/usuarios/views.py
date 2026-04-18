@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import AllowAny
 from supabase import create_client
+from bitacora.utils import registrar_accion, obtener_ip_cliente
 from django.conf import settings
 from django.http import Http404
 import logging
@@ -36,6 +37,17 @@ class LoginView(APIView):
                 'email': email,
                 'password': password
             })
+            # Registrar en bitácora
+            ip_cliente = obtener_ip_cliente(request)
+            registrar_accion(
+                usuario_id=auth_response.user.id,
+                usuario_email=email,
+                accion="LOGIN",
+                detalles={
+                    "ip": ip_cliente,
+                    "exitoso": True
+                }
+            )
             # Verificar si el usuario está activo en nuestra tabla
             user_id = auth_response.user.id
             profile = supabase.table('usuario').select('activo', 'rol', 'nombre').eq('id', user_id).execute()
@@ -58,6 +70,21 @@ class LoginView(APIView):
             
         except Exception as e:
             logger.error(f"Error en login: {str(e)}")
+            # Intentar obtener el usuario para registrar fallo
+            try:
+                ip_cliente = obtener_ip_cliente(request)
+                registrar_accion(
+                    usuario_id="desconocido",
+                    usuario_email=email,
+                    accion="LOGIN_FALLIDO",
+                    detalles={
+                        "ip": ip_cliente,
+                        "exitoso": False,
+                        "error": str(e)
+                    }
+                )
+            except:
+                pass  # Si falla el registro, no detenemos el flujo
             return Response({
                 'error': 'Credenciales inválidas'
             }, status=status.HTTP_401_UNAUTHORIZED)
@@ -104,6 +131,18 @@ class RegisterView(APIView):
                 'rol': rol,
             }).eq('id', auth_response.user.id).execute()
             
+            # Registrar en bitácora
+            ip_cliente = obtener_ip_cliente(request)
+            registrar_accion(
+                usuario_id=auth_response.user.id,
+                usuario_email=email,
+                accion="REGISTER",
+                detalles={
+                    "ip": ip_cliente,
+                    "rol_inicial": rol
+                }
+            )
+
             return Response({
                 'message': 'Usuario registrado exitosamente',
                 'user': {
@@ -129,6 +168,16 @@ class LogoutView(APIView):
     """
     def post(self, request):
         try:
+            # Registrar en bitácora
+            if hasattr(request.user, 'id') and hasattr(request.user, 'email'):
+                ip_cliente = obtener_ip_cliente(request)
+                registrar_accion(
+                    usuario_id=request.user.id,
+                    usuario_email=request.user.email,
+                    accion="LOGOUT",
+                    detalles={"ip": ip_cliente}
+                )
+
             supabase = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
             
             # Obtener token del header
@@ -281,6 +330,19 @@ class ChangeUserRoleView(APIView):
             if not response.data:
                 raise Http404("Usuario no encontrado")
             
+            # Registrar en bitácora
+            ip_cliente = obtener_ip_cliente(request)
+            registrar_accion(
+                usuario_id=request.user.id,
+                usuario_email=request.user.email,
+                accion="CHANGE_ROLE",
+                detalles={
+                    "ip": ip_cliente,
+                    "usuario_afectado": str(user_id),
+                    "nuevo_rol": nuevo_rol
+                }
+            )
+
             return Response({
                 'message': 'Rol actualizado exitosamente',
                 'user': response.data[0]
@@ -333,6 +395,19 @@ class ToggleUserActiveView(APIView):
             response = supabase.table('usuario').update({
                 'activo': new_active
             }).eq('id', str(user_id)).execute()
+            
+            # Registrar en bitácora
+            ip_cliente = obtener_ip_cliente(request)
+            registrar_accion(
+                usuario_id=request.user.id,
+                usuario_email=request.user.email,
+                accion="TOGGLE_ACTIVE",
+                detalles={
+                    "ip": ip_cliente,
+                    "usuario_afectado": str(user_id),
+                    "nuevo_estado": "activado" if new_active else "desactivado"
+                }
+            )
             
             return Response({
                 'message': f'Usuario {"activado" if new_active else "desactivado"} exitosamente',

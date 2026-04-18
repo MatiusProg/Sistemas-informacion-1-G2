@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     
     # Nuestra app
     'usuarios',
+    'bitacora',
 ]
 
 MIDDLEWARE = [
