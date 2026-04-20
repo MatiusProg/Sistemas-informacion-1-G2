@@ -9,6 +9,7 @@ import Index from "./pages/Index.tsx";
 import Login from "./pages/Login.tsx";
 import Register from "./pages/Register.tsx";
 import ForgotPassword from "./pages/ForgotPassword.tsx";
+import UpdatePassword from "./pages/UpdatePassword";
 import Profile from "./pages/Profile.tsx";
 import AdminUsers from "./pages/AdminUsers.tsx";
 import NotFound from "./pages/NotFound.tsx";
@@ -27,6 +28,7 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/registro" element={<Register />} />
             <Route path="/recuperar" element={<ForgotPassword />} />
+            <Route path="/actualizar-contrasena" element={<UpdatePassword />} />
             <Route path="/perfil" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="/admin" element={<ProtectedRoute roles={["administrador"]}><AdminUsers /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
