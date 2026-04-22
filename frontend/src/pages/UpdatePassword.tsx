@@ -17,53 +17,65 @@ export default function UpdatePassword() {
 
   useEffect(() => {
     const hash = location.hash;
-    if (hash) {
-      const params = new URLSearchParams(hash.substring(1));
-      const accessToken = params.get("access_token");
-      const refreshToken = params.get("refresh_token");
-      const type = params.get("type");
+    const search = location.search;
+    
+    let accessToken: string | null = null;
+    let refreshToken: string | null = null;
+    let type: string | null = null;
 
-      if (accessToken && type === "recovery") {
-        // 🔥 LIMPIEZA NUCLEAR: Borrar TODO el localStorage relacionado con Supabase
+    // Intentar obtener de la query string (?token_hash=...)
+    if (search) {
+        const params = new URLSearchParams(search);
+        accessToken = params.get("token_hash");
+        refreshToken = params.get("refresh_token");
+        type = params.get("type");
+    }
+
+    // Si no hay en query string, intentar del hash (#access_token=...)
+    if (!accessToken && hash) {
+        const params = new URLSearchParams(hash.substring(1));
+        accessToken = params.get("access_token");
+        refreshToken = params.get("refresh_token");
+        type = params.get("type");
+    }
+
+    if (accessToken && type === "recovery") {
+        // 🔥 LIMPIEZA NUCLEAR: Borrar TODO el localStorage/sessionStorage
         Object.keys(localStorage).forEach(key => {
-          if (key.startsWith('sb-') || key.includes('supabase')) {
+        if (key.startsWith('sb-') || key.includes('supabase')) {
             localStorage.removeItem(key);
-          }
+        }
         });
         
-        // También limpiar sessionStorage por si acaso
         Object.keys(sessionStorage).forEach(key => {
-          if (key.startsWith('sb-') || key.includes('supabase')) {
+        if (key.startsWith('sb-') || key.includes('supabase')) {
             sessionStorage.removeItem(key);
-          }
+        }
         });
 
-        // Ahora establecer la nueva sesión
+        // Establecer la nueva sesión con el token
         supabase.auth.setSession({
-          access_token: accessToken,
-          refresh_token: refreshToken || "",
+        access_token: accessToken,
+        refresh_token: refreshToken || "",
         }).then(({ data, error }) => {
-          if (error) {
+        if (error) {
             console.error("Error setting session:", error);
             toast.error("El enlace de recuperación no es válido o ha expirado.");
             navigate("/login");
-          } else {
-            // Obtener el email del usuario desde el token
+        } else {
             if (data.user?.email) {
-              setEmail(data.user.email);
+            setEmail(data.user.email);
             }
             toast.success(`Restableciendo contraseña para ${data.user?.email || 'tu cuenta'}`);
-          }
+        }
         });
-      } else {
+    } else if (search || hash) {
+        // Si hay parámetros pero no son válidos
         toast.error("El enlace de recuperación no es válido o ha expirado.");
         navigate("/login");
-      }
-    } else {
-      // Si no hay hash, redirigir al login
-      navigate("/login");
     }
-  }, [location, navigate]);
+    // Si no hay ni search ni hash, simplemente mostramos el formulario (por si alguien llega manualmente)
+    }, [location, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
