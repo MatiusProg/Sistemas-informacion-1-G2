@@ -15,67 +15,38 @@ export default function UpdatePassword() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => {
-    const hash = location.hash;
+    useEffect(() => {
     const search = location.search;
     
-    let accessToken: string | null = null;
-    let refreshToken: string | null = null;
-    let type: string | null = null;
-
-    // Intentar obtener de la query string (?token_hash=...)
     if (search) {
         const params = new URLSearchParams(search);
-        accessToken = params.get("token_hash");
-        refreshToken = params.get("refresh_token");
-        type = params.get("type");
-    }
+        const tokenHash = params.get("token_hash");
+        const type = params.get("type");
 
-    // Si no hay en query string, intentar del hash (#access_token=...)
-    if (!accessToken && hash) {
-        const params = new URLSearchParams(hash.substring(1));
-        accessToken = params.get("access_token");
-        refreshToken = params.get("refresh_token");
-        type = params.get("type");
-    }
-
-    if (accessToken && type === "recovery") {
-        // 🔥 LIMPIEZA NUCLEAR: Borrar TODO el localStorage/sessionStorage
-        Object.keys(localStorage).forEach(key => {
-        if (key.startsWith('sb-') || key.includes('supabase')) {
-            localStorage.removeItem(key);
-        }
-        });
-        
-        Object.keys(sessionStorage).forEach(key => {
-        if (key.startsWith('sb-') || key.includes('supabase')) {
-            sessionStorage.removeItem(key);
-        }
-        });
-
-        // Establecer la nueva sesión con el token
-        supabase.auth.setSession({
-        access_token: accessToken,
-        refresh_token: refreshToken || "",
+        if (tokenHash && type === "recovery") {
+        // 🔥 Verificar el token OTP (One-Time Password)
+        supabase.auth.verifyOtp({
+            token_hash: tokenHash,
+            type: 'recovery'
         }).then(({ data, error }) => {
-        if (error) {
-            console.error("Error setting session:", error);
+            if (error) {
+            console.error("Error verificando OTP:", error);
             toast.error("El enlace de recuperación no es válido o ha expirado.");
             navigate("/login");
-        } else {
+            } else {
+            // Token verificado correctamente. Ahora el usuario tiene una sesión activa.
             if (data.user?.email) {
-            setEmail(data.user.email);
+                setEmail(data.user.email);
             }
             toast.success(`Restableciendo contraseña para ${data.user?.email || 'tu cuenta'}`);
-        }
+            }
         });
-    } else if (search || hash) {
-        // Si hay parámetros pero no son válidos
+        } else {
         toast.error("El enlace de recuperación no es válido o ha expirado.");
         navigate("/login");
+        }
     }
-    // Si no hay ni search ni hash, simplemente mostramos el formulario (por si alguien llega manualmente)
-    }, [location, navigate]);
+     }, [location, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
