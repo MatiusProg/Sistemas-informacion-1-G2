@@ -212,6 +212,25 @@ class ResetPasswordView(APIView):
             supabase = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
             supabase.auth.reset_password_email(email)
             
+            # Registrar en bitácora (sin usuario_id porque aún no está autenticado)
+            ip_cliente = obtener_ip_cliente(request)
+            try:
+                # Intentar obtener el ID del usuario por email
+                supabase = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
+                user_response = supabase.table('usuario').select('id').eq('email', email).execute()
+                usuario_id = user_response.data[0]['id'] if user_response.data else "desconocido"
+            except:
+                usuario_id = "desconocido"
+
+            registrar_accion(
+                usuario_id=usuario_id,
+                usuario_email=email,
+                accion="PASSWORD_RESET_REQUESTED",
+                detalles={
+                    "ip": ip_cliente
+                }
+            )
+
             return Response({
                 'message': 'Se ha enviado un enlace de recuperación a tu email'
             }, status=status.HTTP_200_OK)
@@ -253,6 +272,73 @@ class UserProfileView(APIView):
             logger.error(f"Error obteniendo perfil: {str(e)}")
             return Response({'error': 'Error al obtener perfil'}, status=status.HTTP_400_BAD_REQUEST)
         
+    def patch(self, request):
+        """
+        Actualiza el perfil del usuario autenticado.
+        PATCH /api/auth/profile/
+        Body: { "nombre": "Nuevo nombre", "email": "nuevo@email.com" }
+        """
+        try:
+            supabase = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
+            
+            user_id = request.user.id
+            update_data = {}
+            
+            if 'nombre' in request.data:
+                update_data['nombre'] = request.data['nombre']
+            if 'email' in request.data:
+                update_data['email'] = request.data['email']
+            
+            if not update_data:
+                return Response(
+                    {'error': 'Al menos un campo (nombre o email) es requerido'}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            # Actualizar en la tabla usuario
+            response = supabase.table('usuario').update(update_data).eq('id', str(user_id)).execute()
+            
+            if not response.data:
+                return Response(
+                    {'error': 'Usuario no encontrado'}, 
+                    status=status.HTTP_404_NOT_FOUND
+                )
+            
+            # Si se actualizó el email, también actualizar en auth.users
+            if 'email' in update_data:
+                try:
+                    supabase.auth.admin.update_user_by_id(
+                        str(user_id), 
+                        {'email': update_data['email']}
+                    )
+                except Exception as e:
+                    logger.warning(f"No se pudo actualizar email en auth.users: {str(e)}")
+            
+            # Registrar en bitácora
+            ip_cliente = obtener_ip_cliente(request)
+            registrar_accion(
+                usuario_id=str(user_id),
+                usuario_email=request.user.email,
+                accion="UPDATE_PROFILE",
+                detalles={
+                    "ip": ip_cliente,
+                    "campos_actualizados": list(update_data.keys())
+                }
+            )
+
+            return Response({
+                'message': 'Perfil actualizado exitosamente',
+                'nombre': response.data[0].get('nombre'),
+                'email': response.data[0].get('email')
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            logger.error(f"Error actualizando perfil: {str(e)}")
+            return Response(
+                {'error': f'Error al actualizar perfil: {str(e)}'}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+            
 class UserListView(APIView):
     """
     Lista todos los usuarios (solo para administradores).
@@ -549,3 +635,25 @@ class AdminUpdateUserView(APIView):
                 {'error': f'Error al actualizar: {str(e)}'}, 
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+
+class LogPasswordResetView(APIView):
+    """
+    Registra en bitácora que un usuario completó el cambio de contraseña.
+    POST /api/auth/log-password-reset/
+    """
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request):
+        try:
+            ip_cliente = obtener_ip_cliente(request)
+            registrar_accion(
+                usuario_id=str(request.user.id),
+                usuario_email=request.user.email,
+                accion="PASSWORD_RESET_COMPLETED",
+                detalles={"ip": ip_cliente}
+            )
+            return Response({'message': 'Registrado'}, status=status.HTTP_200_OK)
+        except Exception as e:
+            logger.error(f"Error registrando password reset: {str(e)}")
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

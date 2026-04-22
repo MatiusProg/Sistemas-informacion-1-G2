@@ -21,6 +21,7 @@ export default function Profile() {
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(user?.nombre ?? "");
   const [email, setEmail] = useState(user?.email ?? "");
+  const [loading, setLoading] = useState(false);
 
   if (!user) return null;
   
@@ -29,9 +30,70 @@ export default function Profile() {
   const isChef = user.rol === "chef";
 
   const save = async () => {
-    await updateProfile({ nombre: name, email });
-    setEditing(false);
-    toast.success("Perfil actualizado");
+    // Validaciones básicas
+    if (!name.trim()) {
+      toast.error("El nombre no puede estar vacío");
+      return;
+    }
+    if (!email.trim()) {
+      toast.error("El email no puede estar vacío");
+      return;
+    }
+    
+    setLoading(true);
+    
+    try {
+      const token = localStorage.getItem("access_token");
+      if (!token) {
+        toast.error("No se encontró la sesión. Inicia sesión nuevamente.");
+        navigate("/login");
+        return;
+      }
+      
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/profile/`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          nombre: name,
+          email: email
+        })
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Error al actualizar el perfil");
+      }
+      
+      const updatedData = await response.json();
+      
+      // Actualizar el usuario en el contexto y en localStorage
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        const userData = JSON.parse(storedUser);
+        userData.nombre = updatedData.nombre || name;
+        userData.email = updatedData.email || email;
+        localStorage.setItem("user", JSON.stringify(userData));
+      }
+      
+      // Actualizar el estado local
+      setName(updatedData.nombre || name);
+      setEmail(updatedData.email || email);
+      
+      setEditing(false);
+      toast.success("Perfil actualizado exitosamente");
+      
+      // Recargar la página para reflejar cambios en el header
+      window.location.reload();
+      
+    } catch (error: any) {
+      console.error("Error actualizando perfil:", error);
+      toast.error(error.message || "Error al actualizar el perfil");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -110,15 +172,26 @@ export default function Profile() {
                   </div>
                 </div>
                 <div className="flex gap-3 pt-2">
-                  <Button size="lg" onClick={save} className={`${isChef ? "chef-touch" : ""} flex-1 shadow-soft`}>
-                    <Save className="mr-2 h-5 w-5" /> Guardar
+                  <Button 
+                    size="lg" 
+                    onClick={save} 
+                    className={`${isChef ? "chef-touch" : ""} flex-1 shadow-soft`}
+                    disabled={loading}
+                  >
+                    <Save className="mr-2 h-5 w-5" /> 
+                    {loading ? "Guardando..." : "Guardar"}
                   </Button>
-                  <Button size="lg" variant="outline" onClick={() => { 
-                    setEditing(false); 
-                    setName(user.nombre); 
-                    setEmail(user.email); 
-                  }}
-                    className={`${isChef ? "chef-touch" : ""} flex-1`}>
+                  <Button 
+                    size="lg" 
+                    variant="outline" 
+                    onClick={() => { 
+                      setEditing(false); 
+                      setName(user.nombre); 
+                      setEmail(user.email); 
+                    }}
+                    className={`${isChef ? "chef-touch" : ""} flex-1`}
+                    disabled={loading}
+                  >
                     <X className="mr-2 h-5 w-5" /> Cancelar
                   </Button>
                 </div>

@@ -87,15 +87,37 @@ export default function UpdatePassword() {
       toast.error(error.message);
       setLoading(false);
     } else {
+
+      // Después de supabase.auth.updateUser() exitoso
+      // Registrar en bitácora
+      try {
+        const token = localStorage.getItem("access_token");
+        if (token) {
+          await fetch(`${import.meta.env.VITE_API_URL}/auth/log-password-reset/`, {
+            method: "POST",
+            headers: { "Authorization": `Bearer ${token}` }
+          });
+        }
+      } catch (e) {
+        console.warn("No se pudo registrar en bitácora:", e);
+      }
+
       toast.success(`¡Contraseña actualizada con éxito para ${email || 'tu cuenta'}!`);
       
       // Cerrar sesión después de actualizar
       await supabase.auth.signOut();
+
+      // Limpiar localStorage por seguridad
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("refresh_token");
+      localStorage.removeItem("user");
       
       // Redirigir al login después de 2 segundos
       setTimeout(() => {
         navigate("/login");
       }, 2000);
+
+      setLoading(false);
     }
   };
 

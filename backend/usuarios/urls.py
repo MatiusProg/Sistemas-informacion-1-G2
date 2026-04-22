@@ -5,11 +5,12 @@ from .views import (
     LogoutView,
     ResetPasswordView,
     UserProfileView,
-    UserListView,           # NUEVO
-    ChangeUserRoleView,      # NUEVO
-    ToggleUserActiveView,    # NUEVO
-    AdminCreateUserView,   # <-- AÑADIR
-    AdminUpdateUserView,   # <-- AÑADIR (si lo creaste)
+    UserListView,           
+    ChangeUserRoleView,      
+    ToggleUserActiveView,    
+    AdminCreateUserView,  
+    AdminUpdateUserView,   
+    LogPasswordResetView, # NUEVO
 )
 
 urlpatterns = [
@@ -18,6 +19,7 @@ urlpatterns = [
     path('auth/logout/', LogoutView.as_view(), name='logout'),
     path('auth/reset-password/', ResetPasswordView.as_view(), name='reset-password'),
     path('auth/profile/', UserProfileView.as_view(), name='profile'),
+    path('auth/log-password-reset/', LogPasswordResetView.as_view(), name='log-password-reset'),
     
     # NUEVOS ENDPOINTS PARA ADMIN
     path('auth/users/', UserListView.as_view(), name='user-list'),
