@@ -27,9 +27,40 @@ export default function Register() {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (password.length < 6) {
-      toast.error("La contraseña debe tener al menos 6 caracteres");
+    // Validación de nombre (sin números ni caracteres especiales)
+    const nombreRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+    if (!nombreRegex.test(name.trim())) {
+      toast.error("El nombre solo puede contener letras y espacios.");
+      return;
+    }
+    if (name.trim().length < 3) {
+      toast.error("El nombre debe tener al menos 3 caracteres.");
+      return;
+    }
+    if (name.trim().length > 50) {
+      toast.error("El nombre no puede exceder los 50 caracteres.");
+      return;
+    }
+
+    // Validación de contraseña fuerte
+    if (password.length < 8) {
+      toast.error("La contraseña debe tener al menos 8 caracteres.");
+      return;
+    }
+    if (!/[A-Z]/.test(password)) {
+      toast.error("La contraseña debe contener al menos una letra mayúscula.");
+      return;
+    }
+    if (!/[a-z]/.test(password)) {
+      toast.error("La contraseña debe contener al menos una letra minúscula.");
+      return;
+    }
+    if (!/[0-9]/.test(password)) {
+      toast.error("La contraseña debe contener al menos un número.");
+      return;
+    }
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+      toast.error("La contraseña debe contener al menos un carácter especial (!@#$%^&*...).");
       return;
     }
     if (password !== confirm) {

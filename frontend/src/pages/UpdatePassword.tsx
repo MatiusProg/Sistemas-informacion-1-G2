@@ -51,9 +51,26 @@ export default function UpdatePassword() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (password.length < 6) {
-      toast.error("La contraseña debe tener al menos 6 caracteres");
-      return;
+    // Validación de contraseña fuerte
+    if (password.length < 8) {
+    toast.error("La contraseña debe tener al menos 8 caracteres.");
+    return;
+    }
+    if (!/[A-Z]/.test(password)) {
+    toast.error("La contraseña debe contener al menos una letra mayúscula.");
+    return;
+    }
+    if (!/[a-z]/.test(password)) {
+    toast.error("La contraseña debe contener al menos una letra minúscula.");
+    return;
+    }
+    if (!/[0-9]/.test(password)) {
+    toast.error("La contraseña debe contener al menos un número.");
+    return;
+    }
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+    toast.error("La contraseña debe contener al menos un carácter especial (!@#$%^&*...).");
+    return;
     }
     if (password !== confirm) {
       toast.error("Las contraseñas no coinciden");
