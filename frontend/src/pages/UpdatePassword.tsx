@@ -34,11 +34,16 @@ export default function UpdatePassword() {
             toast.error("El enlace de recuperación no es válido o ha expirado.");
             navigate("/login");
             } else {
-            // Token verificado correctamente. Ahora el usuario tiene una sesión activa.
-            if (data.user?.email) {
-                setEmail(data.user.email);
-            }
-            toast.success(`Restableciendo contraseña para ${data.user?.email || 'tu cuenta'}`);
+              // 🔥 GUARDAR EL TOKEN MANUALMENTE
+              if (data.session?.access_token) {
+                localStorage.setItem("access_token", data.session.access_token);
+                localStorage.setItem("refresh_token", data.session.refresh_token || "");
+              }
+              // Token verificado correctamente. Ahora el usuario tiene una sesión activa.
+              if (data.user?.email) {
+                  setEmail(data.user.email);
+              }
+              toast.success(`Restableciendo contraseña para ${data.user?.email || 'tu cuenta'}`);
             }
         });
         } else {
