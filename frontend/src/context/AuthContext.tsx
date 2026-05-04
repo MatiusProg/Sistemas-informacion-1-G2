@@ -82,8 +82,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
 
       if (!response.ok) {
-        const error = await response.json();
-        return { ok: false, error: error.error || "Credenciales inválidas" };
+          const errorData = await response.json().catch(() => ({}));
+          
+          // Detectar bloqueo por demasiados intentos (403 Forbidden)
+          if (response.status === 403) {
+              return { 
+                  ok: false, 
+                  error: "Demasiados intentos fallidos. Tu cuenta ha sido bloqueada temporalmente. Espera 15 minutos e inténtalo de nuevo." 
+              };
+          }
+          
+          // Otros errores (401, 400, etc.)
+          return { ok: false, error: errorData.error || "Credenciales inválidas" };
       }
 
       const data = await response.json();

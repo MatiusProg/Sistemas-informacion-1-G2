@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { useAuth, Role } from "@/context/AuthContext";
 import { toast } from "sonner";
 import { ChefHat, ShieldCheck, User } from "lucide-react";
+// BUSCAR BOTON O SIMBOLO PARA VER LA CONTRASEÑA 
 
 // Roles actualizados según el documento del proyecto
 const ROLES: { value: Role; label: string; icon: React.ReactNode; desc: string }[] = [
@@ -69,14 +70,7 @@ export default function Register() {
     }
 
     setLoading(true);
-    
-    // Mapear campos al formato que espera el backend
-    const result = await register({ 
-      nombre: name,   // ✅ "name" del formulario → "nombre" del backend
-      email, 
-      password, 
-      rol: role       // ✅ "role" del formulario → "rol" del backend
-    });
+    const result = await register({ nombre: name, email, password, rol: 'usuario' }); // Forzamos 'usuario' aquí
     
     setLoading(false);
 
@@ -85,8 +79,11 @@ export default function Register() {
       return;
     }
     
-    toast.success("¡Cuenta creada con éxito!");
-    navigate("/perfil");
+    toast.success("¡Cuenta creada! Revisa tu correo electrónico para confirmarla.");
+    // Redirigir al login después de 3 segundos
+    setTimeout(() => {
+      navigate("/login");
+    }, 3000);
   };
 
   return (
@@ -140,30 +137,10 @@ export default function Register() {
           </div>
         </div>
 
-        <div className="space-y-2">
-          <Label className="text-base">Selecciona tu rol</Label>
-          <div className="grid grid-cols-3 gap-2">
-            {ROLES.map((r) => (
-              <button
-                type="button"
-                key={r.value}
-                onClick={() => setRole(r.value)}
-                className={`p-3 rounded-2xl border-2 transition-all text-center ${
-                  role === r.value
-                    ? "border-primary bg-primary/10 shadow-soft scale-105"
-                    : "border-border bg-card hover:border-primary/50"
-                }`}
-                disabled={loading}
-              >
-                <div className={`mx-auto mb-1 ${role === r.value ? "text-primary" : "text-muted-foreground"}`}>
-                  {r.icon}
-                </div>
-                <div className="font-semibold text-sm">{r.label}</div>
-                <div className="text-[11px] text-muted-foreground">{r.desc}</div>
-              </button>
-            ))}
-          </div>
-        </div>
+        <p className="text-sm text-muted-foreground text-center">
+          Tu cuenta se creará con el rol de <strong>Usuario</strong>. 
+          Un administrador podrá asignarte más permisos si es necesario.
+        </p>
 
         <Button 
           type="submit" 

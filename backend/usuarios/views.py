@@ -37,6 +37,20 @@ class LoginView(APIView):
                 'email': email,
                 'password': password
             })
+            
+            # ============================================
+            #  NUEVO: Registrar intento EXITOSO en login_attempts
+            # ============================================
+            try:
+                ip_cliente = obtener_ip_cliente(request)
+                supabase.table('login_attempts').insert({
+                    'email': email,
+                    'ip_address': ip_cliente,
+                    'success': True
+                }).execute()
+            except Exception as log_error:
+                logger.error(f"Error registrando intento exitoso: {str(log_error)}")
+            
             # Registrar en bitácora
             ip_cliente = obtener_ip_cliente(request)
             registrar_accion(
@@ -48,16 +62,26 @@ class LoginView(APIView):
                     "exitoso": True
                 }
             )
+            
             # Verificar si el usuario está activo en nuestra tabla
             user_id = auth_response.user.id
             profile = supabase.table('usuario').select('activo', 'rol', 'nombre').eq('id', user_id).execute()
 
             if profile.data and profile.data[0].get('activo') == False:
-                # Cerrar sesión inmediatamente
                 supabase.auth.sign_out()
                 return Response({
                     'error': 'Tu cuenta ha sido desactivada. Contacta al administrador.'
                 }, status=status.HTTP_403_FORBIDDEN)
+            
+            # Verificar si el email está confirmado
+            try:
+                user_details = supabase.auth.admin.get_user_by_id(user_id)
+                if user_details.user and not user_details.user.email_confirmed_at:
+                    return Response({
+                        'error': 'Debes confirmar tu correo electrónico antes de iniciar sesión. Revisa tu bandeja de entrada y haz clic en el enlace de confirmación.'
+                    }, status=status.HTTP_403_FORBIDDEN)
+            except:
+                pass
 
             return Response({
                 'access_token': auth_response.session.access_token,
@@ -70,11 +94,61 @@ class LoginView(APIView):
             
         except Exception as e:
             logger.error(f"Error en login: {str(e)}")
-            # Intentar obtener el usuario para registrar fallo
+            
+            # ============================================
+            #  NUEVO: Registrar intento FALLIDO en login_attempts
+            # ============================================
+            try:
+                ip_cliente = obtener_ip_cliente(request)
+                supabase.table('login_attempts').insert({
+                    'email': email,
+                    'ip_address': ip_cliente,
+                    'success': False
+                }).execute()
+            except Exception as log_error:
+                logger.error(f"Error registrando intento fallido: {str(log_error)}")
+            
+            # ============================================
+            #  NUEVO: Verificar si debe ser BLOQUEADO
+            # ============================================
+            try:
+                from datetime import datetime, timedelta
+                limite_tiempo = (datetime.now() - timedelta(minutes=15)).isoformat()
+                
+                intentos = supabase.table('login_attempts') \
+                    .select('*', count='exact') \
+                    .eq('email', email) \
+                    .eq('success', False) \
+                    .gte('attempt_time', limite_tiempo) \
+                    .execute()
+                
+                if intentos.count and intentos.count >= 3:
+                    # Registrar en bitácora el bloqueo
+                    try:
+                        ip_cliente = obtener_ip_cliente(request)
+                        registrar_accion(
+                            usuario_id="00000000-0000-0000-0000-000000000000",
+                            usuario_email=email,
+                            accion="LOGIN_BLOQUEADO",
+                            detalles={
+                                "ip": ip_cliente,
+                                "intentos_fallidos": intentos.count
+                            }
+                        )
+                    except:
+                        pass
+                    
+                    return Response({
+                        'error': 'Demasiados intentos fallidos. Tu cuenta ha sido bloqueada temporalmente. Espera 15 minutos e inténtalo de nuevo.'
+                    }, status=status.HTTP_403_FORBIDDEN)
+            except Exception as block_error:
+                logger.error(f"Error verificando bloqueo: {str(block_error)}")
+            
+            # Registrar fallo en bitácora
             try:
                 ip_cliente = obtener_ip_cliente(request)
                 registrar_accion(
-                    usuario_id="desconocido",
+                    usuario_id="00000000-0000-0000-0000-000000000000",
                     usuario_email=email,
                     accion="LOGIN_FALLIDO",
                     detalles={
@@ -84,17 +158,17 @@ class LoginView(APIView):
                     }
                 )
             except:
-                pass  # Si falla el registro, no detenemos el flujo
+                pass
+            
             return Response({
                 'error': 'Credenciales inválidas'
             }, status=status.HTTP_401_UNAUTHORIZED)
-
 
 class RegisterView(APIView):
     """
     Endpoint para registrar nuevos usuarios.
     POST /api/auth/register/
-    Body: { "email": "nuevo@example.com", "password": "123456", "nombre": "Juan Perez", "rol": "chef" }
+    Body: { "email": "nuevo@example.com", "password": "123456", "nombre": "Juan Perez", "rol": "usuario"(por defecto) }
     """
     permission_classes = [AllowAny]
     
@@ -107,7 +181,10 @@ class RegisterView(APIView):
         email = serializer.validated_data['email']
         password = serializer.validated_data['password']
         nombre = serializer.validated_data['nombre']
-        rol = serializer.validated_data['rol']
+        rol = serializer.validated_data.get('rol', 'usuario')  # <-- Usar 'usuario' si no se envía
+        
+        # FORZAR 'usuario' para todos los nuevos registros
+        rol = 'usuario'
         
         try:
             supabase = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)

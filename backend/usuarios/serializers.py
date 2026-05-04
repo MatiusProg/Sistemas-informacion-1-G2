@@ -11,8 +11,9 @@ class RegisterSerializer(serializers.Serializer):
     password = serializers.CharField(required=True, write_only=True, min_length=6)
     nombre = serializers.CharField(required=True, max_length=100)
     rol = serializers.ChoiceField(
-        choices=['chef', 'administrador', 'almacenero'],
-        default='chef'
+        choices=['chef', 'administrador', 'usuario'],
+        default='usuario',  # <-- Cambiar default a 'usuario'
+        required=False      # <-- Hacerlo OPCIONAL
     )
 
 
