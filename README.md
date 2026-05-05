@@ -49,6 +49,51 @@ backend/
 └── railway.json # Configuración de despliegue en Railway
 ```
 
+### Frontend (`/frontend/`)
+```bash
+frontend/
+├── src/
+│ ├── context/
+│ │ └── AuthContext.tsx # 🔥 Contexto de autenticación (login, register, logout, etc.)
+│ ├── pages/
+│ │ ├── Login.tsx # Página de Inicio de Sesión
+│ │ ├── Register.tsx # Página de Registro (rol "usuario" por defecto)
+│ │ ├── ForgotPassword.tsx # Página de Recuperación de Contraseña
+│ │ ├── UpdatePassword.tsx # Página de Cambio de Contraseña (desde email)
+│ │ ├── Profile.tsx # Página de Perfil (ver/editar datos)
+│ │ ├── AdminUsers.tsx # Panel de Administración (solo admin)
+│ │ ├── Index.tsx # Página de inicio pública
+│ │ └── NotFound.tsx # Página 404
+│ ├── components/
+│ │ ├── AppHeader.tsx # Barra de navegación superior
+│ │ ├── AuthLayout.tsx # Plantilla para páginas de auth
+│ │ ├── ProtectedRoute.tsx # 🔒 Protege rutas según autenticación y rol
+│ │ ├── Logo.tsx # Componente del logo
+│ │ ├── NavLink.tsx # Enlace de navegación
+│ │ └── ui/ # Componentes de shadcn/ui (botones, inputs, etc.)
+│ ├── lib/
+│ │ ├── supabase.ts # Cliente de Supabase para el frontend
+│ │ └── utils.ts # Función utilitaria cn() para estilos
+│ ├── hooks/ # Hooks personalizados
+│ ├── App.tsx # Componente principal (rutas)
+│ ├── main.tsx # Punto de entrada de React
+│ └── index.css # Estilos globales
+├── index.html # Plantilla HTML principal
+├── package.json # Dependencias y scripts de Node.js
+├── vite.config.ts # Configuración de Vite
+├── tailwind.config.ts # Configuración de Tailwind CSS
+├── tsconfig.json # Configuración de TypeScript
+├── .env # Variables de entorno (NO se sube a Git)
+└── railway.json # Configuración de despliegue en Railway
+```
+
+### Documentación (`/docs/`)
+```bash
+docs/
+├── diagramas/ # Diagramas UML, Ishikawa, Relacionales
+└── informes/ # Avances, Entrevistas, Análisis
+```
+
 ## 🚀 Guía de Inicio Rápido para el Equipo (Paso a Paso para Principiantes)
 
 Si es tu primera vez con Git, Python o Node.js, ¡no te preocupes! Sigue esta guía al pie de la letra y en 20-30 minutos tendrás todo el proyecto funcionando en tu computadora.
