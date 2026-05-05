@@ -10,10 +10,44 @@ Sistema inteligente para gestión de almacenes gastronómicos con control de cad
 | Nombre | Registro | GitHub |
 |--------|----------|--------|
 | Andrade Nova Marcos David | 223041505 | @MarcosAndradeNova |
-| Chispas Flores Mirian Lisbet | 223047457 | *(pendiente)* |
+| Chispas Flores Mirian Lisbet | 223047457 | *(Retiro...)* | 
 | Grageda Rojas Adalid | 221044574 | *(pendiente)* |
 | **Hurtado Castro Luis Mateo** | **222008687** | **@MatiusProg** |
 | Ortega Mancilla Karen Paola | 222056592 | @KarenOrtegaM |
+
+## 📁 Estructura Detallada del Proyecto
+
+### Backend (`/backend/`)
+```bash
+backend/
+├── venv/ # Entorno virtual Python (NO se sube a Git)
+├── nucleo/ # Configuración principal de Django
+│ ├── init.py
+│ ├── settings.py # Configuración global (CORS, Supabase, BD)
+│ ├── urls.py # Rutas principales (/admin/, /api/)
+│ └── wsgi.py # Entrada para servidores WSGI (Railway)
+├── usuarios/ # App de Autenticación y Usuarios
+│ ├── init.py
+│ ├── admin.py # Panel admin de Django
+│ ├── apps.py # Configuración de la app
+│ ├── authentication.py # Autenticación personalizada con Supabase JWT
+│ ├── models.py # Modelos de datos
+│ ├── serializers.py # Validación de datos (Login, Register, Reset)
+│ ├── urls.py # Rutas de la API (/auth/login/, /auth/register/, etc.)
+│ └── views.py # Lógica de negocio (Login, Register, Profile, Admin)
+├── bitacora/ # App de Auditoría
+│ ├── init.py
+│ ├── admin.py # Panel admin de Django
+│ ├── apps.py # Configuración de la app
+│ ├── models.py # Modelo Bitacora (registro de acciones)
+│ ├── utils.py # Funciones helper (registrar_accion, obtener_ip)
+│ └── migrations/ # Migraciones de la base de datos
+├── manage.py # Comandos de Django (runserver, migrate, etc.)
+├── requirements.txt # Dependencias Python
+├── .env # Variables de entorno (NO se sube a Git)
+├── .env.example # Ejemplo de variables de entorno
+└── railway.json # Configuración de despliegue en Railway
+```
 
 ## 🚀 Guía de Inicio Rápido para el Equipo (Paso a Paso para Principiantes)
 
