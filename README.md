@@ -10,7 +10,7 @@ Sistema inteligente para gestión de almacenes gastronómicos con control de cad
 | Nombre | Registro | GitHub |
 |--------|----------|--------|
 | Andrade Nova Marcos David | 223041505 | @MarcosAndradeNova |
-| Chispas Flores Mirian Lisbet | 223047457 | *(Retiro...)* | 
+| Chispas Flores Mirian Lisbet | 223047457 | *(Retiró...)* | 
 | Grageda Rojas Adalid | 221044574 | *(pendiente)* |
 | **Hurtado Castro Luis Mateo** | **222008687** | **@MatiusProg** |
 | Ortega Mancilla Karen Paola | 222056592 | @KarenOrtegaM |
