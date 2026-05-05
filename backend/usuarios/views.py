@@ -16,9 +16,32 @@ logger = logging.getLogger(__name__)
 
 class LoginView(APIView):
     """
-    Endpoint para iniciar sesión con Supabase.
-    POST /api/auth/login/
+    Endpoint para iniciar sesión con Supabase Auth.
+    
+    Método: POST
+    URL: /api/auth/login/
     Body: { "email": "usuario@example.com", "password": "123456" }
+    
+    Flujo:
+    1. Valida credenciales con Supabase Auth.
+    2. Si son correctas, verifica que la cuenta esté activa.
+    3. Si la cuenta está desactivada, cierra sesión y devuelve error 403.
+    4. Si el email no está confirmado, devuelve error 403 con instrucciones.
+    5. Si todo es correcto, devuelve tokens de acceso.
+    6. Registra la acción en la bitácora (LOGIN o LOGIN_FALLIDO).
+    7. Registra el intento en login_attempts para control de bloqueo.
+    
+    Respuesta exitosa (200):
+    {
+        "access_token": "...",
+        "refresh_token": "...",
+        "user": { "id": "...", "email": "..." }
+    }
+    
+    Posibles errores:
+    - 400: Datos inválidos (falta email o password).
+    - 401: Credenciales inválidas.
+    - 403: Cuenta desactivada, email no confirmado, o cuenta bloqueada por intentos.
     """
     permission_classes = [AllowAny]
     

@@ -8,7 +8,30 @@ import { useAuth, Role } from "@/context/AuthContext";
 import { ChefHat, ShieldCheck, User, LogOut, Edit3, Save, X, Mail, User as UserIcon } from "lucide-react";
 import { toast } from "sonner";
 
-// ✅ Roles actualizados
+
+/**
+ * Profile - Página de Perfil de Usuario.
+ * 
+ * Esta página muestra la información del usuario autenticado y permite
+ * editar su nombre y email. También incluye un botón para cerrar sesión.
+ * 
+ * Características:
+ * - Vista de perfil con nombre, email y rol.
+ * - Icono representativo según el rol (chef, admin, usuario).
+ * - Modo edición: Permite cambiar nombre y email.
+ * - Botón "Cerrar Sesión" con confirmación.
+ * - Diseño responsivo con gradiente de fondo.
+ * 
+ * Flujo de edición:
+ * 1. Usuario hace clic en "Editar Perfil".
+ * 2. Se muestran campos editables para nombre y email.
+ * 3. Usuario modifica los campos y hace clic en "Guardar".
+ * 4. Se llama a updateProfile() del AuthContext.
+ * 5. Si es exitoso, se actualiza la vista y se recarga la página.
+ * 
+ * Fecha: 05/05/26
+ */
+
 const ROLE_META: Record<Role, { label: string; icon: React.ElementType; color: string }> = {
   chef: { label: "Chef", icon: ChefHat, color: "from-primary to-primary-glow" },
   administrador: { label: "Administrador", icon: ShieldCheck, color: "from-accent to-primary" },

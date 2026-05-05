@@ -1,5 +1,27 @@
 import { createClient } from "@supabase/supabase-js";
 
+/**
+ * Cliente de Supabase para el Frontend.
+ * 
+ * Este módulo crea y exporta una instancia única del cliente de Supabase
+ * que se utiliza en toda la aplicación para:
+ * - Autenticación (login, registro, recuperación de contraseña).
+ * - Verificación de tokens OTP.
+ * - Actualización de contraseñas.
+ * 
+ * Configuración:
+ * - Las credenciales se leen de las variables de entorno:
+ *   VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY.
+ * - En desarrollo, se muestra una advertencia si las variables no están configuradas.
+ * 
+ * Seguridad:
+ * - La ANON_KEY es pública por diseño y está protegida por Row Level Security (RLS).
+ * - NUNCA se debe usar la SERVICE_ROLE_KEY en el frontend.
+ * 
+ * Fecha: 05/05/26
+ */
+
+
 // Obtener variables de entorno de forma segura
 const getEnvVariable = (key: string): string => {
   if (typeof import.meta !== 'undefined' && import.meta.env) {

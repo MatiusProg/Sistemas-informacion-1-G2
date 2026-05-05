@@ -9,6 +9,30 @@ import { toast } from "sonner";
 import { ChefHat, ShieldCheck, User } from "lucide-react";
 // BUSCAR BOTON O SIMBOLO PARA VER LA CONTRASEÑA 
 
+/**  DOCUMENTACIONNN
+ * Register - Página de Registro de Usuarios.
+ * 
+ * Esta página muestra un formulario para que nuevos usuarios creen
+ * una cuenta en el sistema. Todos los usuarios se registran con el
+ * rol "usuario" por defecto (no pueden elegir rol).
+ * 
+ * Validaciones implementadas:
+ * - Nombre: Solo letras y espacios, 3-50 caracteres.
+ * - Email: Formato de email válido.
+ * - Contraseña: Mínimo 8 caracteres, debe contener al menos:
+ *   una mayúscula, una minúscula, un número y un carácter especial.
+ * - Confirmación de contraseña: Debe coincidir con la contraseña.
+ * 
+ * Flujo:
+ * 1. Usuario llena el formulario.
+ * 2. Se validan los campos localmente.
+ * 3. Se llama a la función register() del AuthContext.
+ * 4. Si es exitoso, se muestra un mensaje de confirmación de email.
+ * 5. Después de 3 segundos, se redirige automáticamente al login (/login).
+ * 
+ * Fecha: 05/05/26
+ */
+
 // Roles actualizados según el documento del proyecto
 const ROLES: { value: Role; label: string; icon: React.ReactNode; desc: string }[] = [
   { value: "chef", label: "Chef", icon: <ChefHat className="h-7 w-7" />, desc: "Cocina y preparación" },

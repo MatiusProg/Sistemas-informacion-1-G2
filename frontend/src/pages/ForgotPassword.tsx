@@ -7,6 +7,29 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/context/AuthContext";
 import { ArrowLeft, CheckCircle2, Mail } from "lucide-react";
 
+/**
+ * ForgotPassword - Página de Recuperación de Contraseña.
+ * 
+ * Esta página permite a los usuarios solicitar un enlace de
+ * recuperación de contraseña ingresando su email.
+ * 
+ * Características:
+ * - Formulario con campo Email.
+ * - Botón "Enviar enlace de recuperación".
+ * - Mensaje de confirmación (siempre se muestra por seguridad).
+ * - Enlace "Volver al login".
+ * 
+ * Flujo:
+ * 1. Usuario ingresa su email.
+ * 2. Se llama a requestReset() del AuthContext.
+ * 3. El backend envía un correo con el enlace de recuperación.
+ * 4. Se muestra un mensaje de confirmación.
+ * 5. El usuario revisa su bandeja de entrada y hace clic en el enlace.
+ * 6. Es redirigido a la página UpdatePassword.
+ * 
+ * Fecha: 05/05/26
+ */
+
 export default function ForgotPassword() {
   const { requestReset } = useAuth();
   const [email, setEmail] = useState("");

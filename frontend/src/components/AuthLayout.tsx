@@ -1,6 +1,27 @@
 import { ReactNode } from "react";
 import Logo from "./Logo";
 
+/**
+ * AuthLayout - Plantilla para Páginas de Autenticación.
+ * 
+ * Este componente proporciona un diseño consistente para las páginas
+ * de autenticación: Login, Register, ForgotPassword.
+ * 
+ * Props:
+ * - title: Título de la página (ej: "Iniciar Sesión").
+ * - subtitle: Subtítulo descriptivo.
+ * - children: Contenido del formulario.
+ * 
+ * Características:
+ * - Diseño centrado vertical y horizontalmente.
+ * - Logo de la aplicación.
+ * - Tarjeta con sombra y bordes redondeados.
+ * - Footer con copyright.
+ * - Fondo con gradiente suave.
+ * 
+ * Fecha: 05/05/26
+ */
+
 export default function AuthLayout({ children, title, subtitle }: { children: ReactNode; title: string; subtitle?: string }) {
   return (
     <div className="min-h-screen flex flex-col lg:flex-row">

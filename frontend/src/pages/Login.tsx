@@ -8,6 +8,29 @@ import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
 import { Mail, Lock } from "lucide-react";
 
+/**
+ * Login - Página de Inicio de Sesión.
+ * 
+ * Esta página muestra un formulario para que los usuarios ingresen
+ * con su email y contraseña. Se comunica con el backend Django/Supabase
+ * a través del contexto de autenticación (AuthContext).
+ * 
+ * Características:
+ * - Formulario con campos Email y Contraseña.
+ * - Botón "Iniciar Sesión" con estado de carga.
+ * - Enlace a "¿Olvidaste tu contraseña?" (ForgotPassword).
+ * - Enlace a "¿No tienes cuenta? Regístrate" (Register).
+ * - Manejo de errores con mensajes toast.
+ * 
+ * Flujo:
+ * 1. Usuario ingresa credenciales.
+ * 2. Se llama a la función login() del AuthContext.
+ * 3. Si es exitoso, se redirige al perfil (/perfil).
+ * 4. Si falla, se muestra un mensaje de error.
+ * 
+ * Fecha: 05/05/26
+ */
+
 export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();

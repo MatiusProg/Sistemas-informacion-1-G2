@@ -28,6 +28,27 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/api";
 
+
+/**
+ * AuthContext - Contexto de Autenticación del Sistema.
+ * 
+ * Este es el CORAZÓN del frontend. Proporciona el estado de autenticación
+ * y las funciones de login, registro, logout, y gestión de usuarios a
+ * TODOS los componentes de la aplicación.
+ * 
+ * Funciones principales:
+ * - login(email, password): Inicia sesión contra el backend Django/Supabase.
+ * - register(data): Registra un nuevo usuario (rol "usuario" por defecto).
+ * - logout(): Cierra la sesión actual.
+ * - updateProfile(data): Actualiza nombre/email del usuario autenticado.
+ * - changeUserRole(id, rol): Cambia el rol de un usuario (solo admin).
+ * - toggleUserActive(id): Activa/desactiva un usuario (solo admin).
+ * - refreshUsers(): Recarga la lista de usuarios (solo admin).
+ * 
+ * El token de acceso se almacena en localStorage para persistir la sesión.
+ *  04/05/26
+ */
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [users, setUsers] = useState<User[]>([]);

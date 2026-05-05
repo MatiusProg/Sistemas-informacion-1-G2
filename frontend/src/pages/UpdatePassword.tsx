@@ -6,6 +6,31 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
 
+/**
+ * UpdatePassword - Página de Cambio de Contraseña.
+ * 
+ * Esta página es accedida a través del enlace enviado por correo
+ * electrónico cuando un usuario solicita recuperar su contraseña.
+ * 
+ * Características:
+ * - Captura el token de recuperación de la URL (query string).
+ * - Verifica el token OTP con Supabase Auth.
+ * - Muestra el email del usuario para confirmación visual.
+ * - Formulario con campos: Nueva Contraseña y Confirmar Contraseña.
+ * - Validaciones de contraseña fuerte implementadas.
+ * - Limpieza de sesión anterior (localStorage/sessionStorage).
+ * - Cierre de sesión automático después del cambio.
+ * - Redirección al login después de 2 segundos.
+ * 
+ * Validaciones de contraseña:
+ * - Mínimo 8 caracteres.
+ * - Al menos una letra mayúscula.
+ * - Al menos una letra minúscula.
+ * - Al menos un número.
+ * - Al menos un carácter especial (!@#$%^&*...).
+ * 
+ * Fecha: 05/05/26
+ */
 
 export default function UpdatePassword() {
   const [password, setPassword] = useState("");
