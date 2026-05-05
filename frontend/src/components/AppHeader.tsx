@@ -4,6 +4,26 @@ import { Button } from "@/components/ui/button";
 import Logo from "./Logo";
 import { LogOut, User as UserIcon, Users } from "lucide-react";
 
+/**
+ * AppHeader - Barra de Navegación Principal.
+ * 
+ * Este componente muestra la barra de navegación superior que aparece
+ * en todas las páginas cuando el usuario está autenticado.
+ * 
+ * Características:
+ * - Logo de la aplicación (enlace a /perfil).
+ * - Botón "Perfil" (siempre visible).
+ * - Botón "Usuarios" (SOLO visible para administradores).
+ * - Botón "Salir" para cerrar sesión.
+ * - Resalta el botón de la página actual.
+ * - Diseño responsivo con Tailwind CSS.
+ * 
+ * Estado:
+ * - Si NO hay usuario autenticado, el header NO se renderiza (return null).
+ * 
+ * Fecha: 05/05/26
+ */
+
 export default function AppHeader() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
