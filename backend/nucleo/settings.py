@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     # Apps de terceros
     'rest_framework',
     'corsheaders',
@@ -45,6 +44,7 @@ INSTALLED_APPS = [
     # Nuestra app
     'usuarios',
     'bitacora',
+    'inventario',
 ]
 
 MIDDLEWARE = [
@@ -134,12 +134,12 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 # Configuración de Django REST Framework
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'usuarios.authentication.SupabaseAuthentication',
-    ],
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-    ],
+    #'DEFAULT_AUTHENTICATION_CLASSES': [
+    #    'usuarios.authentication.SupabaseAuthentication',
+    #],
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     'rest_framework.permissions.IsAuthenticated',
+    # ],
 }
 
 # Configuración de Supabase (desde variables de entorno)
