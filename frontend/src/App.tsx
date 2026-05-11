@@ -18,6 +18,9 @@ import InsumoList from "./pages/Insumos/InsumoList";
 import InsumoForm from "./pages/Insumos/InsumoForm";
 import InsumoDetail from "./pages/Insumos/InsumoDetail";
 
+/*CU 12 GESTIONAR <STOCK*/
+import StockList from "./pages/Stock/StockList.tsx";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -41,6 +44,9 @@ const App = () => (
             <Route path="/insumos/crear" element={<ProtectedRoute roles={["administrador"]}><InsumoForm /></ProtectedRoute>} />
             <Route path="/insumos/editar/:id" element={<ProtectedRoute roles={["administrador"]}><InsumoForm /></ProtectedRoute>} />
             <Route path="/insumos/:id" element={<ProtectedRoute roles={["administrador", "chef"]}><InsumoDetail /></ProtectedRoute>} />
+
+            <Route path="/stock" element={<ProtectedRoute roles={["administrador", "chef"]}><StockList /></ProtectedRoute>} />
+
           </Routes>
         </AuthProvider>
       </BrowserRouter>
