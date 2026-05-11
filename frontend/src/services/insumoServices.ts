@@ -84,3 +84,42 @@ export const insumoService = {
     }
   },
 };
+
+/**
+ * ============================================================
+ * CU08 - Consultar Ficha Técnica Digital
+ * Agregado: 11/05/26
+ * ============================================================
+ */
+
+export interface FichaTecnica {
+  id?: number;
+  temperatura: string;
+  madurez: string;
+  caracteristicas: string;
+  referencias: string;
+  insumo_id: number;
+}
+
+export interface InsumoConFicha {
+  insumo: Insumo;
+  ficha_tecnica: FichaTecnica | null;
+}
+
+export const fichaTecnicaService = {
+  /**
+   * Obtiene un insumo junto con su ficha técnica asociada.
+   * @param insumoId - ID del insumo a consultar
+   * @returns Objeto con { insumo, ficha_tecnica }
+   */
+  getById: async (insumoId: number): Promise<InsumoConFicha> => {
+    const res = await fetch(`${API_URL}/insumos/${insumoId}/ficha-tecnica/`, {
+      headers: headers(),
+    });
+    if (!res.ok) {
+      const error = await res.json();
+      throw new Error(error.error || "Error al obtener ficha técnica");
+    }
+    return res.json();
+  },
+};
