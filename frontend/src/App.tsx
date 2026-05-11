@@ -36,10 +36,15 @@ import AdminRoles from "./pages/AdminRoles";
 import BitacoraList from "./pages/BitacoraList";
 import InsumoList from "./pages/Insumos/InsumoList";
 import InsumoForm from "./pages/Insumos/InsumoForm";
+import InsumoDetail from "./pages/Insumos/InsumoDetail";
 import FichaSearch from "./pages/Insumos/FichaSearch";
 
 // TEMPORAL PARA LAS PAGINAS NO CREADAS AUN
 import Placeholder from "./pages/Placeholder";
+
+/*CU 12 GESTIONAR <STOCK*/
+import StockList from "./pages/Stock/StockList.tsx";
+import StockForm from "@/pages/Stock/StockForm";
 
 const queryClient = new QueryClient();
 
@@ -69,13 +74,46 @@ const App = () => (
 
             {/* PAQUETE 2: Gestión de Insumos */}
             <Route path="/insumos" element={<ProtectedRoute roles={["administrador", "chef"]}><InsumoList /></ProtectedRoute>} />
+
+            <Route path="/insumos/crear" element={<ProtectedRoute roles={["administrador"]}><InsumoForm /></ProtectedRoute>} />
+            <Route path="/insumos/editar/:id" element={<ProtectedRoute roles={["administrador"]}><InsumoForm /></ProtectedRoute>} />
+            <Route path="/insumos/:id" element={<ProtectedRoute roles={["administrador", "chef"]}><InsumoDetail /></ProtectedRoute>} />
+
             <Route path="/insumos/crear" element={<ProtectedRoute roles={["administrador", "chef"]}><InsumoForm /></ProtectedRoute>} />
             <Route path="/insumos/:id/editar" element={<ProtectedRoute roles={["administrador", "chef"]}><InsumoForm /></ProtectedRoute>} />
             <Route path="/insumos/ficha" element={<ProtectedRoute roles={["administrador", "chef", "gerente", "usuario"]}><FichaSearch /></ProtectedRoute>} />
 
+            {/* PAQUETE 2: Gestión de Stock */}
+          {/* PAQUETE 2: Gestión de Stock */}
+
+<Route
+    path="/stock"
+    element={
+        <ProtectedRoute roles={["administrador", "chef"]}>
+            <StockList />
+        </ProtectedRoute>
+    }
+/>
+
+<Route
+    path="/stock/nuevo"
+    element={
+        <ProtectedRoute roles={["administrador", "chef"]}>
+            <StockForm />
+        </ProtectedRoute>
+    }
+/>
+
+<Route
+    path="/stock/editar/:id"
+    element={
+        <ProtectedRoute roles={["administrador", "chef"]}>
+            <StockForm />
+        </ProtectedRoute>
+    }
+/>
             <Route path="/estacionalidad" element={<ProtectedRoute><Placeholder /></ProtectedRoute>} />
             <Route path="/historial-precios" element={<ProtectedRoute><Placeholder /></ProtectedRoute>} />
-            <Route path="/stock" element={<ProtectedRoute><Placeholder /></ProtectedRoute>} />
             <Route path="/stock/ajuste" element={<ProtectedRoute><Placeholder /></ProtectedRoute>} />
             <Route path="/lotes" element={<ProtectedRoute><Placeholder /></ProtectedRoute>} />
             <Route path="/movimientos" element={<ProtectedRoute><Placeholder /></ProtectedRoute>} />
@@ -98,6 +136,7 @@ const App = () => (
 
             {/* 404 */}
             <Route path="*" element={<NotFound />} />
+
           </Routes>
         </AuthProvider>
       </BrowserRouter>
