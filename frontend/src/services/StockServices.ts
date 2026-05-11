@@ -15,9 +15,16 @@ const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/api";
     cantidad: number;
     stock_min: number;
     stock_max: number;
-    inventario_id: number;
+
     insumo_id: number;
+
+    insumo?: {
+        nombre: string;
+    };
     }
+
+
+
 
 const getToken = () => localStorage.getItem("access_token");
 
@@ -27,17 +34,19 @@ const getToken = () => localStorage.getItem("access_token");
     });
 
     export const StockService = {
-    getAll: async (): Promise<Stock[]> => {
-        const res = await fetch(`${API_URL}/stock/`, {
-        headers: headers(),
-        });
 
-        if (!res.ok) {
-        throw new Error("Error al cargar stock");
-        }
+        getAll: async (): Promise<Stock[]> => {
 
-        return res.json();
-    },
+            const res = await fetch(`${API_URL}/stock/`, {
+                headers: headers(),
+            });
+
+            if (!res.ok) {
+                throw new Error("Error al cargar stock");
+            }
+
+            return res.json();
+        },
 
     getById: async (id: number): Promise<Stock> => {
         const res = await fetch(`${API_URL}/stock/${id}/`, {
@@ -89,4 +98,4 @@ const getToken = () => localStorage.getItem("access_token");
         throw new Error("Error al eliminar stock");
         }
     },
-    };
+}

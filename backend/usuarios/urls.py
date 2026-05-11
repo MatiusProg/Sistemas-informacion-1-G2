@@ -13,7 +13,9 @@ from .views import (
     LogPasswordResetView, # NUEVO
 )
 from .insumo_views import InsumoListView, InsumoDetailView
-from .stock_views import StockListView
+from .stock_views import StockListView, StockDetailView
+
+
 
 """
 Configuración de rutas (URLs) para la app de Usuarios.
@@ -69,4 +71,6 @@ urlpatterns = [
 
     #=======CU 12 GESTION DE STOCK =======================
     path("stock/", StockListView.as_view()),
+    path("stock/<int:stock_id>/", StockDetailView.as_view()),
+
 ]

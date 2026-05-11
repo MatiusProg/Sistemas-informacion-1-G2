@@ -1,0 +1,401 @@
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import AppHeader from "@/components/AppHeader";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+
+import { ArrowLeft, PlusCircle } from "lucide-react";
+
+import { toast } from "sonner";
+
+import { StockService } from "@/services/StockServices";
+import { insumoService } from "@/services/insumoServices";
+
+export default function StockForm() {
+
+    const navigate = useNavigate();
+
+    const { id } = useParams();
+
+    const isEditing = Boolean(id);
+
+    const [loading, setLoading] = useState(false);
+
+    const [insumos, setInsumos] = useState<any[]>([]);
+
+    const [form, setForm] = useState({
+        insumo_id: "",
+        cantidad: "",
+        stock_min: "",
+        stock_max: "",
+    });
+
+    useEffect(() => {
+
+        insumoService
+            .getAll()
+            .then(setInsumos)
+            .catch(() => {
+                toast.error("Error al cargar insumos");
+            });
+
+        if (isEditing && id) {
+
+            StockService
+                .getById(Number(id))
+                .then((data) => {
+
+                    setForm({
+                        insumo_id:
+                            data.insumo_id?.toString() || "",
+
+                        cantidad:
+                            data.cantidad?.toString() || "",
+
+                        stock_min:
+                            data.stock_min?.toString() || "",
+
+                        stock_max:
+                            data.stock_max?.toString() || "",
+                    });
+
+                })
+                .catch(() => {
+                    toast.error("Error al cargar stock");
+                });
+
+        }
+
+    }, [id, isEditing]);
+
+    const handleChange = (
+        field: string,
+        value: string
+    ) => {
+
+        setForm((prev) => ({
+            ...prev,
+            [field]: value,
+        }));
+
+    };
+
+    const handleSubmit = async (
+        e: React.FormEvent
+    ) => {
+
+        e.preventDefault();
+
+        setLoading(true);
+
+        try {
+
+            const payload:any = {
+
+                insumo_id:
+                    Number(form.insumo_id),
+
+                cantidad:
+                    Number(form.cantidad),
+
+                stock_min:
+                    Number(form.stock_min),
+
+                stock_max:
+                    Number(form.stock_max),
+            };
+
+            // VALIDACIONES
+
+            if (payload.cantidad < 0) {
+
+                toast.error(
+                    "La cantidad no puede ser negativa"
+                );
+
+                setLoading(false);
+                return;
+            }
+
+            if (
+                payload.stock_min >
+                payload.stock_max
+            ) {
+
+                toast.error(
+                    "El stock mínimo no puede ser mayor al máximo"
+                );
+
+                setLoading(false);
+                return;
+            }
+
+            if (isEditing && id) {
+
+                await StockService.update(
+                    Number(id),
+                    payload
+                );
+
+                toast.success(
+                    "Stock actualizado correctamente"
+                );
+
+            } else {
+
+                await StockService.create(
+                    payload
+                );
+
+                toast.success(
+                    "Stock creado correctamente"
+                );
+
+            }
+
+            navigate("/stock");
+
+        } catch (err: any) {
+
+            toast.error(
+                err.message || "Error al guardar"
+            );
+
+        } finally {
+
+            setLoading(false);
+
+        }
+
+    };
+
+    return (
+
+        <div className="min-h-screen bg-gradient-soft">
+
+            <AppHeader />
+
+            <main className="container py-8 max-w-2xl">
+
+                {/* BOTÓN VOLVER */}
+
+                <Button
+                    variant="ghost"
+                    onClick={() => navigate(-1)}
+                    className="mb-6"
+                >
+
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+
+                    Volver
+
+                </Button>
+
+                {/* HEADER */}
+
+                <div className="flex items-center gap-3 mb-8">
+
+                    <div className="h-12 w-12 rounded-2xl bg-primary/10 grid place-items-center">
+
+                        <PlusCircle className="h-6 w-6 text-primary" />
+
+                    </div>
+
+                    <div>
+
+                        <h1 className="text-3xl font-bold">
+
+                            {isEditing
+                                ? "Editar Stock"
+                                : "Nuevo Stock"}
+
+                        </h1>
+
+                        <p className="text-muted-foreground">
+
+                            Registro de existencias
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+                {/* FORMULARIO */}
+
+                <form
+                    onSubmit={handleSubmit}
+                    className="bg-card rounded-3xl shadow-card p-8 space-y-6"
+                >
+
+                    <div className="space-y-4">
+
+                        <h3 className="font-bold text-lg border-b pb-2">
+
+                            Datos del Stock
+
+                        </h3>
+
+                        {/* INSUMO */}
+
+                        <div className="space-y-2">
+
+                            <Label>
+                                Insumo *
+                            </Label>
+
+                            <Select
+                                value={
+                                    form.insumo_id || undefined
+                                }
+                                onValueChange={(value) =>
+                                    handleChange(
+                                        "insumo_id",
+                                        value
+                                    )
+                                }
+                            >
+
+                                <SelectTrigger>
+
+                                    <SelectValue placeholder="Seleccionar insumo" />
+
+                                </SelectTrigger>
+
+                                <SelectContent>
+
+                                    {insumos.map((insumo) => (
+
+                                        <SelectItem
+                                            key={insumo.id}
+                                            value={insumo.id.toString()}
+                                        >
+
+                                            {insumo.nombre}
+
+                                        </SelectItem>
+
+                                    ))}
+
+                                </SelectContent>
+
+                            </Select>
+
+                        </div>
+
+                        {/* CANTIDAD */}
+
+                        <div className="space-y-2">
+
+                            <Label htmlFor="cantidad">
+                                Cantidad *
+                            </Label>
+
+                            <Input
+                                id="cantidad"
+                                type="number"
+                                required
+                                disabled={loading}
+                                value={form.cantidad}
+                                onChange={(e) =>
+                                    handleChange(
+                                        "cantidad",
+                                        e.target.value
+                                    )
+                                }
+                                placeholder="Ej: 50"
+                            />
+
+                        </div>
+
+                        {/* STOCK */}
+
+                        <div className="grid grid-cols-2 gap-4">
+
+                            <div className="space-y-2">
+
+                                <Label htmlFor="stock_min">
+                                    Stock mínimo *
+                                </Label>
+
+                                <Input
+                                    id="stock_min"
+                                    type="number"
+                                    required
+                                    disabled={loading}
+                                    value={form.stock_min}
+                                    onChange={(e) =>
+                                        handleChange(
+                                            "stock_min",
+                                            e.target.value
+                                        )
+                                    }
+                                    placeholder="Ej: 10"
+                                />
+
+                            </div>
+
+                            <div className="space-y-2">
+
+                                <Label htmlFor="stock_max">
+                                    Stock máximo *
+                                </Label>
+
+                                <Input
+                                    id="stock_max"
+                                    type="number"
+                                    required
+                                    disabled={loading}
+                                    value={form.stock_max}
+                                    onChange={(e) =>
+                                        handleChange(
+                                            "stock_max",
+                                            e.target.value
+                                        )
+                                    }
+                                    placeholder="Ej: 100"
+                                />
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    {/* BOTÓN */}
+
+                    <Button
+                        type="submit"
+                        size="lg"
+                        disabled={
+                            loading ||
+                            !form.insumo_id
+                        }
+                        className="w-full text-lg font-semibold shadow-soft"
+                    >
+
+                        {loading
+                            ? "Guardando..."
+                            : isEditing
+                                ? "Guardar Cambios"
+                                : "Crear Stock"}
+
+                    </Button>
+
+                </form>
+
+            </main>
+
+        </div>
+
+    );
+
+}

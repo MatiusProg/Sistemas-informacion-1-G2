@@ -2,11 +2,14 @@ import { useEffect, useState } from "react";
 import AppHeader from "@/components/AppHeader";
 import { Input } from "@/components/ui/input";
 import { StockService, Stock } from "@/services/StockServices";
+import { Eye, Pencil, Plus } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function StockList() {
 
     const [productos, setProductos] = useState<Stock[]>([]);
     const [search, setSearch] = useState("");
+    const navigate = useNavigate();
 
     useEffect(() => {
         cargarStock();
@@ -31,15 +34,31 @@ export default function StockList() {
 
         <main className="container py-8 max-w-5xl">
 
-            <div className="mb-6">
-            <h1 className="text-3xl font-bold">
-                Gestión de Stock
-            </h1>
+            <div className="mb-6 flex items-center justify-between">
 
-            <p className="text-muted-foreground">
-                Control de inventario y existencias
-            </p>
+            <div>
+                <h1 className="text-3xl font-bold">
+                    Gestión de Stock
+                </h1>
+
+                <p className="text-muted-foreground">
+                    Control de inventario y existencias
+                </p>
             </div>
+
+            <div className="flex gap-3">
+
+                <button
+                    onClick={() => navigate("/stock/nuevo")}
+                    className="bg-green-600 border border-black/100 text-white px-4 py-2 rounded-xl flex items-center gap-2 hover:bg-green-700 transition shadow-sm"
+                >
+                    <Plus size={18} />
+                    Nuevo Stock
+                </button>
+
+            </div>
+
+</div>
 
             <Input
             placeholder="Buscar por ID de insumo..."
@@ -75,7 +94,7 @@ export default function StockList() {
                     Estado
                     </th>
 
-                    <th className="p-4 text-right">
+                    <th className="p-4 text-left">
                     Acciones
                     </th>
 
@@ -92,7 +111,7 @@ export default function StockList() {
                     >
 
                     <td className="p-4 font-medium">
-                        Insumo #{producto.insumo_id}
+                        {producto.insumo?.nombre}
                     </td>
 
                     <td className="p-4">
@@ -131,14 +150,25 @@ export default function StockList() {
 
                     </td>
 
-                    <td className="p-4 text-right">
+                    <td className="p-4 w-[120px]">
 
-                        <button
-                        onClick={() => alert(`Editar stock ${producto.id}`)}
-                        className="bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-600"
-                        >
-                        Editar
-                        </button>
+                        <div className="flex items-center justify-start gap-3">
+
+                            <button
+                                onClick={() => alert(`Ver stock ${producto.id}`)}
+                                className="text-gray-600 hover:text-black transition"
+                            >
+                                <Eye size={18} />
+                            </button>
+
+                            <button
+                                onClick={() => navigate(`/stock/editar/${producto.id}`)}
+                                className="text-blue-600 hover:text-blue-800 transition"
+                            >
+                                <Pencil size={18} />
+                            </button>
+
+                        </div>
 
                     </td>
 
