@@ -134,12 +134,12 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 # Configuración de Django REST Framework
 REST_FRAMEWORK = {
-    #'DEFAULT_AUTHENTICATION_CLASSES': [
-    #    'usuarios.authentication.SupabaseAuthentication',
-    #],
-    # 'DEFAULT_PERMISSION_CLASSES': [
-    #     'rest_framework.permissions.IsAuthenticated',
-    # ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'usuarios.authentication.SupabaseAuthentication',
+    ],
+     'DEFAULT_PERMISSION_CLASSES': [
+         'rest_framework.permissions.IsAuthenticated',
+     ],
 }
 
 # Configuración de Supabase (desde variables de entorno)

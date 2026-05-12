@@ -10,13 +10,15 @@ interface DetalleLote {
   fecha_vencimiento: string;
   subtotal: number;
   insumo?: { id: number; nombre: string };
-  stock?: { id: number; ubicacion: string };
+  stock?: { id: number; inventario_id: number };
+  ubicacion?: string;
 }
 
 interface Lote {
   id: number;
   fecha_ing: string;
   proveedor_id: number | null;
+  proveedor_nombre?: string | null;
   total_lote: number;
   created_at: string;
   detalles: DetalleLote[];
@@ -28,14 +30,14 @@ export default function Lotes() {
   const [showForm, setShowForm] = useState(false);
   const [selectedLote, setSelectedLote] = useState<Lote | null>(null);
   
-  // Estados para el formulario de nuevo lote
   const [fechaIng, setFechaIng] = useState(new Date().toISOString().split('T')[0]);
   const [proveedorId, setProveedorId] = useState('');
   const [detalles, setDetalles] = useState<any[]>([
     { insumo_id: '', stock_id: '', cantidad: '', costo_unitario: '' }
   ]);
 
-  // Cargar lotes al iniciar
+  const [editingLote, setEditingLote] = useState<Lote | null>(null);
+
   useEffect(() => {
     cargarLotes();
   }, []);
@@ -51,13 +53,121 @@ export default function Lotes() {
         }
       });
       const data = await response.json();
-      setLotes(data);
+      setLotes(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Error cargando lotes:', error);
+      setLotes([]);
     } finally {
       setLoading(false);
     }
   };
+
+  const editarLote = (lote: Lote) => {
+    setEditingLote(lote);
+    setFechaIng(lote.fecha_ing);
+    setProveedorId(lote.proveedor_id?.toString() || '');
+    
+    const detallesForm = lote.detalles.map(d => ({
+      insumo_id: d.insumo_id.toString(),
+      stock_id: d.stock_id.toString(),
+      cantidad: d.cantidad.toString(),
+      costo_unitario: d.costo_unitario.toString()
+    }));
+    setDetalles(detallesForm);
+    setShowForm(true);
+  };
+
+  const actualizarLote = async (e: React.FormEvent) => {
+  e.preventDefault();
+  
+  if (!editingLote) return;
+  
+  // Limpiar y validar cada detalle
+  const detallesLimpios = [];
+  for (let i = 0; i < detalles.length; i++) {
+    const d = detalles[i];
+    
+    // Limpiar espacios y caracteres extraños
+    const insumoIdStr = String(d.insumo_id || '').trim().replace(/[^\d]/g, '');
+    const stockIdStr = String(d.stock_id || '').trim().replace(/[^\d]/g, '');
+    const cantidadStr = String(d.cantidad || '').trim().replace(/[^\d.]/g, '');
+    const costoStr = String(d.costo_unitario || '').trim().replace(/[^\d.]/g, '');
+    
+    if (!insumoIdStr || !stockIdStr || !cantidadStr || !costoStr) {
+      alert(`El detalle ${i + 1} tiene campos incompletos o inválidos`);
+      return;
+    }
+    
+    const insumoId = parseInt(insumoIdStr);
+    const stockId = parseInt(stockIdStr);
+    const cantidad = parseFloat(cantidadStr);
+    const costo = parseFloat(costoStr);
+    
+    if (isNaN(insumoId) || insumoId <= 0) {
+      alert(`Insumo ID inválido: ${d.insumo_id}`);
+      return;
+    }
+    if (isNaN(stockId) || stockId <= 0) {
+      alert(`Stock ID inválido: ${d.stock_id}`);
+      return;
+    }
+    if (isNaN(cantidad) || cantidad <= 0) {
+      alert(`Cantidad inválida: ${d.cantidad}`);
+      return;
+    }
+    if (isNaN(costo) || costo <= 0) {
+      alert(`Costo unitario inválido: ${d.costo_unitario}`);
+      return;
+    }
+    
+    detallesLimpios.push({
+      insumo_id: insumoId,
+      stock_id: stockId,
+      cantidad: cantidad,
+      costo_unitario: costo
+    });
+  }
+    
+    const detallesValidos = detalles.filter(d => 
+      d.insumo_id && d.stock_id && d.cantidad && d.costo_unitario
+    );
+    
+    const payload = {
+    fecha_ing: fechaIng,
+    proveedor_id: proveedorId ? parseInt(proveedorId) : null,
+    detalles: detallesLimpios
+  };
+    
+    console.log('Payload LIMPIO:', JSON.stringify(payload));
+    
+    try {
+    const token = (await supabase.auth.getSession()).data.session?.access_token;
+    const response = await fetch(`http://127.0.0.1:8000/api/lotes/${editingLote.id}/`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+      
+      const responseText = await response.text();
+    console.log('Respuesta:', responseText);
+    
+    if (response.ok) {
+      alert('Lote actualizado exitosamente');
+      setShowForm(false);
+      setEditingLote(null);
+      setDetalles([{ insumo_id: '', stock_id: '', cantidad: '', costo_unitario: '' }]);
+      cargarLotes();
+    } else {
+      alert(`Error: ${responseText}`);
+    }
+  } catch (error) {
+    console.error('Error actualizando lote:', error);
+    alert('Error al actualizar lote');
+  }
+};
 
   const agregarDetalle = () => {
     setDetalles([...detalles, { insumo_id: '', stock_id: '', cantidad: '', costo_unitario: '' }]);
@@ -77,6 +187,37 @@ export default function Lotes() {
 
   const crearLote = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validar que todos los detalles tengan campos completos
+    for (let i = 0; i < detalles.length; i++) {
+      const d = detalles[i];
+      if (!d.insumo_id || !d.stock_id || !d.cantidad || !d.costo_unitario) {
+        alert(`El detalle ${i + 1} tiene campos incompletos`);
+        return;
+      }
+      
+      const insumoId = Number(d.insumo_id);
+      const stockId = Number(d.stock_id);
+      const cantidad = Number(d.cantidad);
+      const costo = Number(d.costo_unitario);
+      
+      if (isNaN(insumoId) || insumoId <= 0) {
+        alert(`Insumo ID inválido: ${d.insumo_id}. Debe ser un número entero positivo.`);
+        return;
+      }
+      if (isNaN(stockId) || stockId <= 0) {
+        alert(`Stock ID inválido: ${d.stock_id}. Debe ser un número entero positivo.`);
+        return;
+      }
+      if (isNaN(cantidad) || cantidad <= 0) {
+        alert(`Cantidad inválida: ${d.cantidad}. Debe ser un número positivo.`);
+        return;
+      }
+      if (isNaN(costo) || costo <= 0) {
+        alert(`Costo unitario inválido: ${d.costo_unitario}. Debe ser un número positivo.`);
+        return;
+      }
+    }
     
     const detallesValidos = detalles.filter(d => 
       d.insumo_id && d.stock_id && d.cantidad && d.costo_unitario
@@ -112,6 +253,7 @@ export default function Lotes() {
       if (response.ok) {
         alert('Lote creado exitosamente');
         setShowForm(false);
+        setEditingLote(null);
         setDetalles([{ insumo_id: '', stock_id: '', cantidad: '', costo_unitario: '' }]);
         cargarLotes();
       } else {
@@ -148,6 +290,14 @@ export default function Lotes() {
     }
   };
 
+  const resetForm = () => {
+    setShowForm(false);
+    setEditingLote(null);
+    setDetalles([{ insumo_id: '', stock_id: '', cantidad: '', costo_unitario: '' }]);
+    setFechaIng(new Date().toISOString().split('T')[0]);
+    setProveedorId('');
+  };
+
   if (loading) {
     return <div className="p-8 text-center">Cargando lotes...</div>;
   }
@@ -164,11 +314,12 @@ export default function Lotes() {
         </button>
       </div>
 
-      {/* Formulario para crear lote */}
       {showForm && (
         <div className="bg-white rounded-lg shadow p-6 mb-6 border">
-          <h2 className="text-xl font-semibold mb-4">Crear Nuevo Lote</h2>
-          <form onSubmit={crearLote}>
+          <h2 className="text-xl font-semibold mb-4">
+            {editingLote ? 'Editar Lote' : 'Crear Nuevo Lote'}
+          </h2>
+          <form onSubmit={editingLote ? actualizarLote : crearLote}>
             <div className="grid grid-cols-2 gap-4 mb-4">
               <div>
                 <label className="block text-sm font-medium mb-1">Fecha de Ingreso</label>
@@ -210,6 +361,7 @@ export default function Lotes() {
                       <label className="block text-xs font-medium mb-1">Insumo ID</label>
                       <input
                         type="number"
+                        step="1"
                         value={detalle.insumo_id}
                         onChange={(e) => actualizarDetalle(index, 'insumo_id', e.target.value)}
                         className="w-full border rounded px-2 py-1 text-sm"
@@ -220,10 +372,11 @@ export default function Lotes() {
                       <label className="block text-xs font-medium mb-1">Stock ID</label>
                       <input
                         type="number"
+                        step="1"
                         value={detalle.stock_id}
                         onChange={(e) => actualizarDetalle(index, 'stock_id', e.target.value)}
                         className="w-full border rounded px-2 py-1 text-sm"
-                        placeholder="Ubicación"
+                        placeholder="1,2,3..."
                       />
                     </div>
                     <div className="col-span-2">
@@ -265,13 +418,12 @@ export default function Lotes() {
               type="submit"
               className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 w-full"
             >
-              Guardar Lote
+              {editingLote ? 'Actualizar Lote' : 'Guardar Lote'}
             </button>
           </form>
         </div>
       )}
 
-      {/* Lista de lotes */}
       <div className="grid gap-4">
         {lotes.map((lote) => (
           <div key={lote.id} className="border rounded-lg bg-white shadow-sm overflow-hidden">
@@ -282,19 +434,36 @@ export default function Lotes() {
               <div>
                 <span className="font-bold">Lote #{lote.id}</span>
                 <span className="ml-4 text-gray-600">Fecha: {lote.fecha_ing}</span>
+                {lote.proveedor_nombre && (
+                  <span className="ml-4 text-gray-600">Proveedor: {lote.proveedor_nombre}</span>
+                )}
+                {lote.proveedor_id && !lote.proveedor_nombre && (
+                  <span className="ml-4 text-gray-600">Proveedor ID: {lote.proveedor_id}</span>
+                )}
                 <span className="ml-4 text-green-600 font-semibold">
                   Total: Bs. {lote.total_lote.toFixed(2)}
                 </span>
               </div>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  eliminarLote(lote.id);
-                }}
-                className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600"
-              >
-                Eliminar
-              </button>
+              <div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    editarLote(lote);
+                  }}
+                  className="bg-yellow-500 text-white px-3 py-1 rounded text-sm hover:bg-yellow-600 mr-2"
+                >
+                  Editar
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    eliminarLote(lote.id);
+                  }}
+                  className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600"
+                >
+                  Eliminar
+                </button>
+              </div>
             </div>
             
             {selectedLote?.id === lote.id && (
@@ -303,7 +472,9 @@ export default function Lotes() {
                 <table className="w-full text-sm">
                   <thead className="bg-gray-100">
                     <tr>
+                      <th className="p-2 text-left">Insumo</th>
                       <th className="p-2 text-left">Insumo ID</th>
+                      <th className="p-2 text-left">Ubicación</th>
                       <th className="p-2 text-left">Stock ID</th>
                       <th className="p-2 text-right">Cantidad</th>
                       <th className="p-2 text-right">Costo Unit.</th>
@@ -314,7 +485,9 @@ export default function Lotes() {
                   <tbody>
                     {lote.detalles.map((detalle) => (
                       <tr key={detalle.id} className="border-b">
+                        <td className="p-2">{detalle.insumo?.nombre || detalle.insumo_id}</td>
                         <td className="p-2">{detalle.insumo_id}</td>
+                        <td className="p-2">{detalle.ubicacion || `Stock #${detalle.stock_id}`}</td>
                         <td className="p-2">{detalle.stock_id}</td>
                         <td className="p-2 text-right">{detalle.cantidad}</td>
                         <td className="p-2 text-right">Bs. {detalle.costo_unitario}</td>
