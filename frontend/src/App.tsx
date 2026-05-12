@@ -65,7 +65,7 @@ const App = () => (
             {/* PAQUETE 2: Gestión de Insumos */}
             <Route path="/insumos" element={<ProtectedRoute roles={["administrador", "chef"]}><InsumoList /></ProtectedRoute>} />
             <Route path="/insumos/crear" element={<ProtectedRoute roles={["administrador"]}><InsumoForm /></ProtectedRoute>} />
-            <Route path="/insumos/editar/:id" element={<ProtectedRoute roles={["administrador"]}><InsumoForm /></ProtectedRoute>} />
+            <Route path="/insumos/:id/editar" element={<ProtectedRoute roles={["administrador", "chef"]}><InsumoForm /></ProtectedRoute>} />
             <Route path="/insumos/:id" element={<ProtectedRoute roles={["administrador", "chef"]}><InsumoDetail /></ProtectedRoute>} />
             <Route path="/insumos/ficha" element={<ProtectedRoute roles={["administrador", "chef", "gerente", "usuario"]}><FichaSearch /></ProtectedRoute>} />
 
@@ -81,7 +81,6 @@ const App = () => (
             {/* Placeholders para otros módulos */}
             <Route path="/estacionalidad" element={<ProtectedRoute><Placeholder /></ProtectedRoute>} />
             <Route path="/historial-precios" element={<ProtectedRoute><Placeholder /></ProtectedRoute>} />
-            <Route path="/stock/ajuste" element={<ProtectedRoute><Placeholder /></ProtectedRoute>} />
             <Route path="/movimientos" element={<ProtectedRoute><Placeholder /></ProtectedRoute>} />
             <Route path="/alertas" element={<ProtectedRoute><Placeholder /></ProtectedRoute>} />
             <Route path="/cierre-turno" element={<ProtectedRoute><Placeholder /></ProtectedRoute>} />
