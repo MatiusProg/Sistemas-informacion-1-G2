@@ -35,6 +35,7 @@ import StockForm from "@/pages/Stock/StockForm";
 
 // CU12 - Lotes
 import Lotes from "./pages/Lotes";
+import Menus from "./pages/Menus";
 
 const queryClient = new QueryClient();
 
@@ -76,8 +77,7 @@ const App = () => (
             <Route path="/stock/ajuste" element={<ProtectedRoute roles={["administrador", "chef"]}><StockForm /></ProtectedRoute>} />
 
             {/* CU12 - Gestión de Lotes */}
-            <Route path="/lotes" element={<ProtectedRoute roles={["administrador"]}><Lotes /></ProtectedRoute>} />
-
+            <Route path="/lotes" element={<ProtectedRoute roles={["administrador"]}><Lotes /></ProtectedRoute>} />            <Route path="/menus" element={<ProtectedRoute roles={["administrador", "chef", "gerente"]}><Menus /></ProtectedRoute>} />
             {/* Placeholders para otros módulos */}
             <Route path="/estacionalidad" element={<ProtectedRoute><Placeholder /></ProtectedRoute>} />
             <Route path="/historial-precios" element={<ProtectedRoute><Placeholder /></ProtectedRoute>} />

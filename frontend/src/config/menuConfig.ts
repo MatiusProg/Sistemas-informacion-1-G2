@@ -172,19 +172,19 @@ export const menuConfig: MenuNode[] = [
       {
         id: "cu21",
         label: "Gestionar Recetas",
-        path: "",
+        path: "/recetas",
         roles: ["chef", "administrador"],
       },
       {
         id: "cu22",
         label: "Configurar Merma Técnica",
-        path: "",
+        path: "/merma-tecnica",
         roles: ["administrador", "chef"],
       },
       {
         id: "cu23",
         label: "Gestionar Menús",
-        path: "",
+        path: "/menus",
         roles: ["chef", "gerente", "administrador"],
       },
       {
