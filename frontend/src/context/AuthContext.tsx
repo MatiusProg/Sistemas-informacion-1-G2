@@ -9,6 +9,7 @@ export interface User {
   email: string;
   rol: Role;
   activo?: boolean;
+  tipo?: string;  //  NUEVO
 }
 
 interface AuthContextValue {
