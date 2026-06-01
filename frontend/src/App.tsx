@@ -45,6 +45,13 @@ import PlatoForm from "./pages/Platos/PlatoForm";
 import RecetaList from "./pages/Recetas/RecetaList";
 import RecetaForm from "./pages/Recetas/RecetaForm";
 
+// CU14 - Movimientos de Inventario
+import MovimientoList from "./pages/Movimientos/MovimientoList";
+import MovimientoForm from "./pages/Movimientos/MovimientoForm";
+
+// CU13 - Alertas de Stock
+import AlertaList from "./pages/Alertas/AlertaList";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -103,11 +110,17 @@ const App = () => (
             <Route path="/recetas/nueva" element={<ProtectedRoute roles={["administrador", "chef"]}><RecetaForm /></ProtectedRoute>} />
             <Route path="/recetas/:id/editar" element={<ProtectedRoute roles={["administrador", "chef"]}><RecetaForm /></ProtectedRoute>} />
 
+            {/* CU14 - Registrar Movimiento de Inventario */}
+            <Route path="/movimientos" element={<ProtectedRoute roles={["administrador", "chef"]}><MovimientoList /></ProtectedRoute>} />
+            <Route path="/movimientos/nuevo" element={<ProtectedRoute roles={["administrador", "chef"]}><MovimientoForm /></ProtectedRoute>} />
+            
+            {/* CU13 - Alertas de Stock */}
+            <Route path="/alertas" element={<ProtectedRoute roles={["administrador", "chef"]}><AlertaList /></ProtectedRoute>} />
+
+
             {/* Placeholders — módulos pendientes de implementación */}
             <Route path="/estacionalidad" element={<ProtectedRoute><Placeholder /></ProtectedRoute>} />
             <Route path="/historial-precios" element={<ProtectedRoute><Placeholder /></ProtectedRoute>} />
-            <Route path="/movimientos" element={<ProtectedRoute><Placeholder /></ProtectedRoute>} />
-            <Route path="/alertas" element={<ProtectedRoute><Placeholder /></ProtectedRoute>} />
             <Route path="/cierre-turno" element={<ProtectedRoute><Placeholder /></ProtectedRoute>} />
             <Route path="/descargo" element={<ProtectedRoute><Placeholder /></ProtectedRoute>} />
             <Route path="/merma-tecnica" element={<ProtectedRoute><Placeholder /></ProtectedRoute>} />
