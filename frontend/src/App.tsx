@@ -36,6 +36,11 @@ import StockForm from "@/pages/Stock/StockForm";
 // CU12 - Lotes
 import Lotes from "./pages/Lotes";
 
+// Proveedores
+import ProveedorList from "./pages/Proveedores/ProveedorList";
+
+import HistorialPrecios from "./pages/HistorialPrecios/HistorialPrecios";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -80,7 +85,7 @@ const App = () => (
 
             {/* Placeholders para otros módulos */}
             <Route path="/estacionalidad" element={<ProtectedRoute><Placeholder /></ProtectedRoute>} />
-            <Route path="/historial-precios" element={<ProtectedRoute><Placeholder /></ProtectedRoute>} />
+            <Route path="/historial-precios" element={<ProtectedRoute roles={["administrador", "gerente", "chef"]}><HistorialPrecios /></ProtectedRoute>} />
             <Route path="/movimientos" element={<ProtectedRoute><Placeholder /></ProtectedRoute>} />
             <Route path="/alertas" element={<ProtectedRoute><Placeholder /></ProtectedRoute>} />
             <Route path="/cierre-turno" element={<ProtectedRoute><Placeholder /></ProtectedRoute>} />
@@ -90,7 +95,7 @@ const App = () => (
             <Route path="/merma-tecnica" element={<ProtectedRoute><Placeholder /></ProtectedRoute>} />
             <Route path="/menus" element={<ProtectedRoute><Placeholder /></ProtectedRoute>} />
             <Route path="/sugerir-menu" element={<ProtectedRoute><Placeholder /></ProtectedRoute>} />
-            <Route path="/proveedores" element={<ProtectedRoute><Placeholder /></ProtectedRoute>} />
+            <Route path="/proveedores" element={<ProtectedRoute roles={["administrador", "gerente"]}><ProveedorList /></ProtectedRoute>} />
             <Route path="/proveedores/asociar" element={<ProtectedRoute><Placeholder /></ProtectedRoute>} />
             <Route path="/proveedores/mapa" element={<ProtectedRoute><Placeholder /></ProtectedRoute>} />
             <Route path="/reportes/valor-perdido" element={<ProtectedRoute><Placeholder /></ProtectedRoute>} />

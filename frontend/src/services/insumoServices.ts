@@ -37,6 +37,15 @@ const headers = () => ({
   Authorization: `Bearer ${getToken()}`,
 });
 
+export interface HistorialPrecio {
+  id: number;
+  insumo_id: number;
+  tipo_temporada: string;
+  mes: number;
+  precio_prom: number;
+  comentarios: string;
+}
+
 export const insumoService = {
   getAll: async (): Promise<Insumo[]> => {
     const res = await fetch(`${API_URL}/insumos/`, { headers: headers() });
@@ -82,6 +91,14 @@ export const insumoService = {
       const error = await res.json().catch(() => ({}));
       throw new Error(error.error || "Error al eliminar insumo");
     }
+  },
+
+  getHistorialPrecios: async (id: number): Promise<HistorialPrecio[]> => {
+    const res = await fetch(`${API_URL}/insumos/${id}/historial-precios/`, {
+      headers: headers(),
+    });
+    if (!res.ok) throw new Error("Error al cargar el historial de precios");
+    return res.json();
   },
 };
 

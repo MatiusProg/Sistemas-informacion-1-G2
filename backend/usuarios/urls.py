@@ -12,7 +12,7 @@ from .views import (
     AdminUpdateUserView,   
     LogPasswordResetView, # NUEVO
 )
-from .insumo_views import InsumoListView, InsumoDetailView
+from .insumo_views import InsumoListView, InsumoDetailView, InsumoHistorialPreciosView
 from .stock_views import StockListView, StockDetailView
 from .ficha_views import FichaTecnicaView
 from .bitacora_views import DetalleBitacoraListView
@@ -69,6 +69,7 @@ urlpatterns = [
     # ---- CU7 GESTION DE INSUMOS ----
     path('insumos/', InsumoListView.as_view(), name='insumo-list'),
     path('insumos/<int:insumo_id>/', InsumoDetailView.as_view(), name='insumo-detail'),
+    path('insumos/<int:insumo_id>/historial-precios/', InsumoHistorialPreciosView.as_view(), name='insumo-historial-precios'),
 
     # ---- CU8 CONSULTAR FICHA TECNICA----
     path('insumos/<int:insumo_id>/ficha-tecnica/', FichaTecnicaView.as_view(), name='ficha-tecnica'),

@@ -103,7 +103,7 @@ export const menuConfig: MenuNode[] = [
       {
         id: "cu10",
         label: "Historial de Precios",
-        path: "",
+        path: "/historial-precios",
         roles: ["administrador", "gerente"],
       },
     ],
@@ -205,8 +205,8 @@ export const menuConfig: MenuNode[] = [
       {
         id: "cu17",
         label: "Gestionar Proveedores",
-        path: "",
-        roles: ["administrador"],
+        path: "/proveedores",
+        roles: ["administrador", "gerente"],
       },
       {
         id: "cu18",
