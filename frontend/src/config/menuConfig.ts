@@ -133,7 +133,7 @@ export const menuConfig: MenuNode[] = [
       {
         id: "cu14",
         label: "Movimientos de Inventario",
-        path: "/movimientos",
+        path: "/movimientos",   // ← ya tiene el path correcto
         roles: ["administrador", "chef"],
       },
       {

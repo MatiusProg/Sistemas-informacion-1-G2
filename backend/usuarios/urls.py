@@ -23,6 +23,9 @@ from .receta_views import (                                       # CU21
     RecetaCatalogosView,
 )
 
+from .movimiento_views import MovimientoListView, MovimientoDetailView #CU14
+from .alerta_views import AlertaListView, AlertaConteoView, AlertaDetailView # CU13
+
 
 """
 Configuración de rutas (URLs) para la app de Usuarios.
@@ -99,5 +102,14 @@ urlpatterns = [
     path('recetas/catalogos/', RecetaCatalogosView.as_view(), name='receta-catalogos'),
     path('recetas/', RecetaListView.as_view(), name='receta-list'),
     path('recetas/<int:receta_id>/', RecetaDetailView.as_view(), name='receta-detail'),
+
+    # ---- CU14 MOVIMIENTOS DE INVENTARIO ----
+    path('movimientos/', MovimientoListView.as_view(), name='movimiento-list'),
+    path('movimientos/<int:movimiento_id>/', MovimientoDetailView.as_view(), name='movimiento-detail'),
+
+    # ---- CU13 GESTIONAR ALERTAS ----
+    path('alertas/', AlertaListView.as_view(), name='alerta-list'),
+    path('alertas/conteo/', AlertaConteoView.as_view(), name='alerta-conteo'),
+    path('alertas/<int:alerta_id>/', AlertaDetailView.as_view(), name='alerta-detail'),
 
 ]
