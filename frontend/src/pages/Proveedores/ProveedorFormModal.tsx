@@ -86,12 +86,19 @@ const ProveedorFormModal: React.FC<ProveedorFormModalProps> = ({
           nota: pi.nota || "",
         })) || [],
       });
+    } else if (isOpen) {
+      reset({
+        nombre: "",
+        contacto: "",
+        email: "",
+        ubicacion: "",
+        tipo_pago: "",
+        proveedor_insumo: [],
+      });
     }
   }, [proveedor, isOpen, reset]);
 
   const onSubmit = async (data: FormValues) => {
-    if (!proveedor?.id) return;
-    
     try {
       // Mapeamos los datos de vuelta al formato de la API
       const payload = {
@@ -108,23 +115,33 @@ const ProveedorFormModal: React.FC<ProveedorFormModalProps> = ({
         })),
       };
 
-      const updated = await ProveedorService.update(proveedor.id, payload);
-      toast.success("Proveedor actualizado exitosamente");
-      onSaved(updated);
+      if (proveedor?.id) {
+        const updated = await ProveedorService.update(proveedor.id, payload);
+        toast.success("Proveedor actualizado exitosamente");
+        onSaved(updated);
+      } else {
+        const created = await ProveedorService.create({
+          nombre: payload.nombre,
+          contacto: payload.contacto,
+          email: payload.email,
+          ubicacion: payload.ubicacion,
+          tipo_pago: payload.tipo_pago
+        });
+        toast.success("Proveedor creado exitosamente");
+        onSaved(created);
+      }
     } catch (error) {
-      toast.error("Error al actualizar el proveedor");
+      toast.error("Error al guardar el proveedor");
       console.error(error);
     }
   };
-
-  if (!proveedor) return null;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-3xl bg-white text-gray-800 max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-gray-900 border-b pb-4">
-            Editar Proveedor
+            {proveedor ? "Editar Proveedor" : "Nuevo Proveedor"}
           </DialogTitle>
         </DialogHeader>
 
@@ -157,10 +174,11 @@ const ProveedorFormModal: React.FC<ProveedorFormModalProps> = ({
           </div>
 
           {/* Sección 2: Insumos Suministrados */}
-          <div className="space-y-4">
-            <h3 className="font-semibold text-gray-700 border-b pb-2">
-              Insumos Suministrados
-            </h3>
+          {proveedor && (
+            <div className="space-y-4">
+              <h3 className="font-semibold text-gray-700 border-b pb-2">
+                Insumos Suministrados
+              </h3>
             {fields.length === 0 ? (
               <p className="text-sm text-gray-500 italic">
                 Este proveedor no tiene insumos registrados.
@@ -211,6 +229,7 @@ const ProveedorFormModal: React.FC<ProveedorFormModalProps> = ({
               </div>
             )}
           </div>
+          )}
 
           <div className="flex justify-end gap-3 pt-4 border-t">
             <Button type="button" variant="outline" onClick={onClose}>

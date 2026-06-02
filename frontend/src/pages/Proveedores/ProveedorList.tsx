@@ -14,8 +14,9 @@ import { useEffect, useState } from "react";
 import AppHeader from "@/components/AppHeader";
 import { Input } from "@/components/ui/input";
 import { ProveedorService, Proveedor } from "@/services/proveedorService";
-import { Eye, Search, Pencil } from "lucide-react";
+import { Eye, Search, Pencil, Trash2, PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 import ProveedorDetalleModal from "./ProveedorDetalleModal";
 import ProveedorFormModal from "./ProveedorFormModal";
 
@@ -49,6 +50,11 @@ export default function ProveedorList() {
     setIsEditModalOpen(true);
   };
 
+  const handleOpenCreateModal = () => {
+    setSelectedProveedor(null);
+    setIsEditModalOpen(true);
+  };
+
   const handleCloseModals = () => {
     setSelectedProveedor(null);
     setIsViewModalOpen(false);
@@ -56,8 +62,27 @@ export default function ProveedorList() {
   };
 
   const handleProveedorSaved = (updated: Proveedor) => {
-    setProveedores((prev) => prev.map((p) => p.id === updated.id ? updated : p));
+    setProveedores((prev) => {
+      const exists = prev.find(p => p.id === updated.id);
+      if (exists) {
+        return prev.map((p) => p.id === updated.id ? updated : p);
+      } else {
+        return [updated, ...prev];
+      }
+    });
     handleCloseModals();
+  };
+
+  const handleDeleteProveedor = async (proveedor: Proveedor) => {
+    if (!window.confirm(`¿Estás seguro de eliminar al proveedor "${proveedor.nombre}"?`)) return;
+    try {
+      await ProveedorService.delete(proveedor.id);
+      setProveedores((prev) => prev.filter((p) => p.id !== proveedor.id));
+      toast.success("Proveedor eliminado exitosamente");
+    } catch (error: any) {
+      console.error(error);
+      toast.error(error.message || "Error al eliminar el proveedor");
+    }
   };
 
   // Filtrado avanzado: Buscar por nombre del proveedor o por el nombre de algún insumo que proveen
@@ -85,6 +110,10 @@ export default function ProveedorList() {
           <div className="max-w-6xl mx-auto space-y-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <h2 className="text-2xl font-bold text-gray-800">Catálogo de Proveedores</h2>
+              <Button onClick={handleOpenCreateModal} className="bg-blue-600 hover:bg-blue-700">
+                <PlusCircle className="w-5 h-5 mr-2" />
+                Añadir Proveedor
+              </Button>
             </div>
 
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
@@ -156,6 +185,15 @@ export default function ProveedorList() {
                               title="Editar proveedor"
                             >
                               <Pencil className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50"
+                              onClick={() => handleDeleteProveedor(proveedor)}
+                              title="Eliminar proveedor"
+                            >
+                              <Trash2 className="h-4 w-4" />
                             </Button>
                           </td>
                         </tr>
