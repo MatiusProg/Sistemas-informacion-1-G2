@@ -140,9 +140,84 @@ export default function Lotes() {
     setShowForm(true);
   };
 
-  const handleCloseForm = () => {
-    setShowForm(false);
-    setEditingLote(null);
+  const actualizarLote = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingLote) return;
+
+    const detallesLimpios = [];
+    for (let i = 0; i < detalles.length; i++) {
+      const d = detalles[i];
+      const insumoIdStr = String(d.insumo_id || '').trim().replace(/[^\d]/g, '');
+      const stockIdStr = String(d.stock_id || '').trim().replace(/[^\d]/g, '');
+      const cantidadStr = String(d.cantidad || '').trim().replace(/[^\d.]/g, '');
+      const costoStr = String(d.costo_unitario || '').trim().replace(/[^\d.]/g, '');
+      
+      if (!insumoIdStr || !stockIdStr || !cantidadStr || !costoStr) {
+        alert(`El detalle ${i + 1} tiene campos incompletos o inválidos`);
+        return;
+      }
+      
+      const insumoId = parseInt(insumoIdStr);
+      const stockId = parseInt(stockIdStr);
+      const cantidad = parseFloat(cantidadStr);
+      const costo = parseFloat(costoStr);
+      
+      if (isNaN(insumoId) || insumoId <= 0) {
+        alert(`Insumo ID inválido: ${d.insumo_id}`);
+        return;
+      }
+      if (isNaN(stockId) || stockId <= 0) {
+        alert(`Stock ID inválido: ${d.stock_id}`);
+        return;
+      }
+      if (isNaN(cantidad) || cantidad <= 0) {
+        alert(`Cantidad inválida: ${d.cantidad}`);
+        return;
+      }
+      if (isNaN(costo) || costo <= 0) {
+        alert(`Costo unitario inválido: ${d.costo_unitario}`);
+        return;
+      }
+      
+      detallesLimpios.push({
+        insumo_id: insumoId,
+        stock_id: stockId,
+        cantidad: cantidad,
+        costo_unitario: costo
+      });
+    }
+    
+    const payload = {
+      fecha_ing: fechaIng,
+      proveedor_id: proveedorId ? parseInt(proveedorId) : null,
+      detalles: detallesLimpios
+    };
+    
+    try {
+    const token = (await supabase.auth.getSession()).data.session?.access_token;
+    const response = await fetch(`${API_URL}/lotes/${editingLote.id}/`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+      
+      const responseText = await response.text();
+      if (response.ok) {
+        alert('Lote actualizado exitosamente');
+        setShowForm(false);
+        setEditingLote(null);
+        setDetalles([{ insumo_id: '', stock_id: '', cantidad: '', costo_unitario: '' }]);
+        cargarLotes();
+      } else {
+        alert(`Error: ${responseText}`);
+      }
+    } catch (error) {
+      console.error('Error actualizando lote:', error);
+      alert('Error al actualizar lote');
+    }
   };
 
   const agregarDetalle = () => {
