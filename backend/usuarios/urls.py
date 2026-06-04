@@ -28,7 +28,6 @@ from .menu_views import MenuListView, MenuDetailView, DetalleMenuView # CU23
 from .movimiento_views import MovimientoListView, MovimientoDetailView #CU14
 from .alerta_views import AlertaListView, AlertaConteoView, AlertaDetailView # CU13
 
-
 """
 Configuración de rutas (URLs) para la app de Usuarios.
 
@@ -80,8 +79,6 @@ urlpatterns = [
     # ---- CU7 GESTION DE INSUMOS ----
     path('insumos/', InsumoListView.as_view(), name='insumo-list'),
     path('insumos/<int:insumo_id>/', InsumoDetailView.as_view(), name='insumo-detail'),
-    path('insumos/<int:insumo_id>/historial-precios/', InsumoHistorialPreciosView.as_view(), name='insumo-historial-precios'),
-    path('insumos/<int:insumo_id>/estacionalidad/', EstacionalidadView.as_view(), name='insumo-estacionalidad'),
 
     # ---- CU8 CONSULTAR FICHA TECNICA----
     path('insumos/<int:insumo_id>/ficha-tecnica/', FichaTecnicaView.as_view(), name='ficha-tecnica'),
@@ -97,6 +94,18 @@ urlpatterns = [
     # ============================================
     #             ---- CICLO #3 ----
     # ============================================
+    # ---- CU9 HISTORIAL DE PRECIOS ----
+    path('insumos/<int:insumo_id>/historial-precios/', InsumoHistorialPreciosView.as_view(), name='insumo-historial-precios'),
+    
+    # ---- CU10 ESTACIONALIDAD DE INSUMOS ----
+    path('insumos/<int:insumo_id>/estacionalidad/', EstacionalidadView.as_view(), name='insumo-estacionalidad'),
+    
+    # ----CU17 GESTIONAR PROVEEDORES ----
+        # Estas rutas ya están definidas en inventario/urls.py, pero se incluyen aquí para referencia y organización, aunque realmente se manejan en el módulo de inventario.
+
+    # ---- CU18 ASOCIAR INSUMOS A PROVEEDORES ----
+        # Estas rutas ya están definidas en inventario/urls.py, pero se incluyen aquí para referencia y organización, aunque realmente se manejan en el módulo de inventario.
+
     # ---- CU20 GESTIONAR PLATOS DEL MENÚ ----
     path('platos/', PlatoListView.as_view(), name='plato-list'),           # GET: listar | POST: crear
     path('platos/<int:plato_id>/', PlatoDetailView.as_view(), name='plato-detail'),  # GET / PATCH / DELETE
@@ -106,6 +115,11 @@ urlpatterns = [
     path('recetas/catalogos/', RecetaCatalogosView.as_view(), name='receta-catalogos'),
     path('recetas/', RecetaListView.as_view(), name='receta-list'),
     path('recetas/<int:receta_id>/', RecetaDetailView.as_view(), name='receta-detail'),
+
+    # ---- CU22 GESTIONAR DETALLES DE RECETA ----
+       #Es parte del CU7 y CU8, por lo que esta incluido en el código de esos CU, especificamente
+       # en el archivo insumo_views.py, en la clase FichaTecnicaView, donde se manejan los detalles 
+       # de receta relacionados a cada insumo.
 
     # ---- CU23 GESTIONAR MENUS ----
     path('menus/', MenuListView.as_view(), name='menu-list'),

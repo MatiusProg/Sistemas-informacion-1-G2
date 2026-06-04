@@ -6,6 +6,7 @@ CICLO: 3
 AUTOR: Karen Ortega
 FECHA: 01/06/26
 
+
 DESCRIPCIÓN: Vistas para el CRUD completo de platos del menú.
 Sigue el patrón exacto de insumo_views.py.
 

@@ -8,8 +8,11 @@ router.register(r'lotes', views.LoteViewSet, basename='lote')
 
 urlpatterns = [
     path('', include(router.urls)),
+    #--- CU17 GESTIONAR PROVEEDORES ---
     path('proveedores/', ProveedorListView.as_view(), name='proveedor-list'),
     path('proveedores/<int:proveedor_id>/', ProveedorDetailView.as_view(), name='proveedor-detail'),
+
+    #--- CU18 ASOCIAR INSUMOS A PROVEEDORES ---
     path('proveedores/<int:proveedor_id>/insumos/', ProveedorInsumoView.as_view(), name='proveedor-insumo'),
     path('proveedores/<int:proveedor_id>/insumos/<int:insumo_id>/', ProveedorInsumoView.as_view(), name='proveedor-insumo-delete'),
 ]
