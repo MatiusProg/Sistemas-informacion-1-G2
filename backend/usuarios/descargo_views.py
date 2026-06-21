@@ -71,10 +71,20 @@ se redondea a entero con round() ANTES de comparar contra stock
 (no después), para que la propuesta mostrada al Chef sea
 exactamente la cantidad que se inserta al confirmar. Si redondea
 a 0, el insumo se excluye automáticamente del descargo.
+
+INCIDENTE 2 DETECTADO EN PRODUCCIÓN (Railway, 21/06/26):
+Los movimientos de salida generados por el descargo se mostraban
+en el frontend con fecha "31 dic 1969" (síntoma clásico de un
+timestamp null interpretado como epoch 0 en hora local). Causa:
+el INSERT no incluía 'fecha_mov', y esta columna no tiene un
+DEFAULT confiable en la BD real. Solución: se manda 'fecha_mov'
+explícito (fecha de hoy) en cada INSERT, mismo patrón que ya usa
+MovimientoForm.tsx en CU14 (campo con valor por defecto "hoy").
 ------------------------------------------------------------
 """
 
 import logging
+from datetime import datetime
 
 from rest_framework import status
 from rest_framework.response import Response
@@ -462,6 +472,12 @@ class ConfirmarDescargoView(APIView):
                         # Postgres ("invalid input syntax for type integer").
                         'cantidad': int(item['cantidad_a_descargar']),
                         'destino': 'Descargo automático por venta',
+                        # fecha_mov no tiene un DEFAULT confiable en la BD
+                        # real — se manda explícito (fecha de hoy), mismo
+                        # patrón que MovimientoForm.tsx en CU14. Sin esto,
+                        # el campo llega null y el frontend lo muestra
+                        # como "31 dic 1969" (epoch 0 en hora local).
+                        'fecha_mov': datetime.now().strftime('%Y-%m-%d'),
                     }).execute()
 
                     insumos_descargados.append({
