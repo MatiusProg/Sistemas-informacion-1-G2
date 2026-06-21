@@ -34,6 +34,11 @@ from .reporte_costos_views import (                                       # CU27
     ReporteCostosPDFView,
     ReporteCostosExcelView,
 )
+from .reporte_rotacion_views import (                                     # CU26
+    ReporteRotacionView,
+    ReporteRotacionPDFView,
+    ReporteRotacionExcelView,
+)
 from .sugerencia_menu_views import SugerirMenuView  # CU24
 from .reporte_valor_perdido_views import (                                # CU25
     ReporteValorPerdidoView,
@@ -172,5 +177,9 @@ urlpatterns = [
     path('reportes/valor-perdido/', ReporteValorPerdidoView.as_view(), name='reporte-valor-perdido'),
     path('reportes/valor-perdido/pdf/', ReporteValorPerdidoPDFView.as_view(), name='reporte-valor-perdido-pdf'),
     path('reportes/valor-perdido/excel/', ReporteValorPerdidoExcelView.as_view(), name='reporte-valor-perdido-excel'),
+    # ---- CU26 GENERAR REPORTE DE ROTACION DE INVENTARIO ----
+    path('reportes/rotacion/', ReporteRotacionView.as_view(), name='reporte-rotacion'),
+    path('reportes/rotacion/pdf/', ReporteRotacionPDFView.as_view(), name='reporte-rotacion-pdf'),
+    path('reportes/rotacion/excel/', ReporteRotacionExcelView.as_view(), name='reporte-rotacion-excel'),
 
 ]
