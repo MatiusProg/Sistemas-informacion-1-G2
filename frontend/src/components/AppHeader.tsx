@@ -88,7 +88,7 @@ export default function AppHeader() {
               title={
                 escuchando
                   ? "Escuchando..."
-                  : 'Comando de voz (ej: "mostrar costos", "abrir dashboard")'
+                  : 'Comando de voz (ej: "cuánto cuestan los platos", "cómo va el negocio")'
               }
               className={escuchando ? "text-orange-500" : ""}
             >
