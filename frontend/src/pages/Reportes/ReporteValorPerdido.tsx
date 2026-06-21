@@ -19,6 +19,7 @@
  */
 
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { toast } from "sonner";
 import {
   TrendingDown,
@@ -71,6 +72,13 @@ const REPORTE_VACIO: ReporteValorPerdidoResponse = {
 };
 
 export default function ReporteValorPerdido() {
+  // ── CU32: si se llegó vía comando de voz con intención de
+  // descarga, se resalta el botón correspondiente (no se descarga
+  // automáticamente, solo se sugiere visualmente). ───────────────
+  const location = useLocation();
+  const formatoSugerido = (location.state as { formatoSugerido?: "pdf" | "excel" | null } | null)
+    ?.formatoSugerido;
+
   // ── Estado de filtros ───────────────────────────────────────
   const [insumos, setInsumos] = useState<Insumo[]>([]);
   const [insumoIdFiltro, setInsumoIdFiltro] = useState<string>("todos");
@@ -318,7 +326,11 @@ export default function ReporteValorPerdido() {
               <div className="flex gap-3">
                 <Button
                   variant="outline"
-                  className="rounded-xl h-11 gap-2 border-gray-200"
+                  className={`rounded-xl h-11 gap-2 ${
+                    formatoSugerido === "pdf"
+                      ? "border-orange-400 ring-2 ring-orange-200 text-orange-600"
+                      : "border-gray-200"
+                  }`}
                   onClick={handleDescargarPDF}
                   disabled={descargandoPDF || cargando}
                 >
@@ -331,7 +343,11 @@ export default function ReporteValorPerdido() {
                 </Button>
                 <Button
                   variant="outline"
-                  className="rounded-xl h-11 gap-2 border-gray-200"
+                  className={`rounded-xl h-11 gap-2 ${
+                    formatoSugerido === "excel"
+                      ? "border-orange-400 ring-2 ring-orange-200 text-orange-600"
+                      : "border-gray-200"
+                  }`}
                   onClick={handleDescargarExcel}
                   disabled={descargandoExcel || cargando}
                 >

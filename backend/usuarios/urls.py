@@ -47,6 +47,7 @@ from .reporte_valor_perdido_views import (   # CU25
 )
 from .dashboard_kpis_views import DashboardKPIsView  # CU29
 from .descargo_views import DescargoAutomaticoView, ConfirmarDescargoView  # CU16
+from .comando_voz_views import LogComandoVozView  # CU32
 
 """
 Configuración de rutas (URLs) para la app de Usuarios.
@@ -194,5 +195,11 @@ urlpatterns = [
     # IMPORTANTE: confirmar/ va ANTES si en el futuro se agrega <int:id>/ a este recurso
     path('descargo/', DescargoAutomaticoView.as_view(), name='descargo'),
     path('descargo/confirmar/', ConfirmarDescargoView.as_view(), name='descargo-confirmar'),
+
+    # ---- CU32 REPORTES POR VOZ CON IA ----
+    # Único endpoint de este CU: registro de bitácora genérico.
+    # La captura de voz y la interpretación de comandos ocurren
+    # enteramente en el frontend (useComandoVoz.ts, en AppHeader).
+    path('bitacora/log-accion-voz/', LogComandoVozView.as_view(), name='log-comando-voz'),
 
 ]
