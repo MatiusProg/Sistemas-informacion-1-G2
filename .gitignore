@@ -209,3 +209,9 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Claude Code — archivos de contexto local (no necesarios para el equipo)
+CLAUDE.md
+PROJECT_SNAPSHOT.md
+estructura_proyecto.txt
+.claude/

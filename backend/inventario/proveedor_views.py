@@ -59,7 +59,13 @@ class ProveedorListView(APIView):
                 "ubicacion": data.get("ubicacion", ""),
                 "tipo_pago": data.get("tipo_pago", "")
             }
-            
+
+            # Coordenadas opcionales (CU19): solo se incluyen si vienen en el payload
+            if data.get("latitud") is not None:
+                payload["latitud"] = float(data.get("latitud"))
+            if data.get("longitud") is not None:
+                payload["longitud"] = float(data.get("longitud"))
+
             response = supabase.table('proveedor').insert(payload).execute()
             nuevo_proveedor = response.data[0]
             
@@ -112,7 +118,8 @@ class ProveedorDetailView(APIView):
             supabase = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
             
             # 1. Update Proveedor base fields
-            valid_fields = ["nombre", "contacto", "email", "ubicacion", "tipo_pago"]
+            # latitud/longitud (CU19) se permiten para reubicar el pin en el mapa
+            valid_fields = ["nombre", "contacto", "email", "ubicacion", "tipo_pago", "latitud", "longitud"]
             payload = {k: v for k, v in data.items() if k in valid_fields}
             
             if payload:
