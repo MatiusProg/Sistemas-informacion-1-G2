@@ -34,6 +34,11 @@ from .reporte_costos_views import (                                       # CU27
     ReporteCostosPDFView,
     ReporteCostosExcelView,
 )
+from .reporte_rotacion_views import (                                     # CU26
+    ReporteRotacionView,
+    ReporteRotacionPDFView,
+    ReporteRotacionExcelView,
+)
 from .sugerencia_menu_views import SugerirMenuView  # CU24
 
 """
@@ -162,5 +167,10 @@ urlpatterns = [
     # (POST /api/menus/<id>/platos/, ver DetalleMenuView arriba), no se
     # crea un endpoint de escritura propio para esto.
     path('sugerir-menu/', SugerirMenuView.as_view(), name='sugerir-menu'),
+
+    # ---- CU26 GENERAR REPORTE DE ROTACION DE INVENTARIO ----
+    path('reportes/rotacion/', ReporteRotacionView.as_view(), name='reporte-rotacion'),
+    path('reportes/rotacion/pdf/', ReporteRotacionPDFView.as_view(), name='reporte-rotacion-pdf'),
+    path('reportes/rotacion/excel/', ReporteRotacionExcelView.as_view(), name='reporte-rotacion-excel'),
 
 ]

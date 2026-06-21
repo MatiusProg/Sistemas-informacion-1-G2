@@ -225,7 +225,7 @@ export const menuConfig: MenuNode[] = [
       {
         id: "cu19",
         label: "Localizar Proveedores (Mapa)",
-        path: "",
+        path: "/proveedores/mapa",
         roles: ["administrador", "gerente"],
       },
     ],
@@ -246,7 +246,7 @@ export const menuConfig: MenuNode[] = [
       {
         id: "cu26",
         label: "Reporte de Rotación",
-        path: "",
+        path: "/reportes/rotacion",
         roles: ["administrador", "gerente"],
       },
       {
