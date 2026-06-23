@@ -140,6 +140,14 @@ export default function Lotes() {
     setShowForm(true);
   };
 
+  const handleCloseForm = () => {
+    setShowForm(false);
+    setEditingLote(null);
+    setFechaIng(new Date().toISOString().split('T')[0]);
+    setProveedorId('none');
+    setDetalles([{ insumo_id: '', stock_id: '', cantidad: '', costo_unitario: '' }]);
+  };
+
   const actualizarLote = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingLote) return;
